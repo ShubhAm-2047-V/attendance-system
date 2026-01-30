@@ -2,39 +2,60 @@
 <html>
 <head>
     <title>Mark Attendance</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div class="dashboard">
-    <h2>Mark Attendance</h2>
-    <form method="POST">
-        <select name="subject">
-            <option>Java</option>
-            <option>Python</option>
-        </select>
+<h2>Mark Attendance</h2>
 
-        <table>
-            <tr><th>Name</th><th>Status</th></tr>
-            <tr>
-                <td>Rahul</td>
-                <td>
-                    <input type="radio" name="Rahul" value="Present" required> P
-                    <input type="radio" name="Rahul" value="Absent"> A
-                </td>
-            </tr>
-            <tr>
-                <td>Aman</td>
-                <td>
-                    <input type="radio" name="Aman" value="Present" required> P
-                    <input type="radio" name="Aman" value="Absent"> A
-                </td>
-            </tr>
-        </table>
+<form method="POST">
+    <label>Class:</label>
+    <select name="class" required>
+        <option value="">Select Class</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+    </select>
 
-        <button type="submit">Save</button>
-    </form>
-</div>
+    <label>Standard:</label>
+    <select name="standard" required>
+        <option value="">Select Standard</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+    </select>
+
+    <button type="submit">Load Students</button>
+</form>
+
+<br>
+
+{% if students %}
+<form method="POST" action="/save_attendance">
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Roll No</th>
+        <th>Name</th>
+        <th>Present</th>
+    </tr>
+
+    {% for student in students %}
+    <tr>
+        <td>{{ student.roll_no }}</td>
+        <td>{{ student.username }}</td>
+        <td>
+            <input type="checkbox" name="present" value="{{ student.id }}">
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+<button type="submit">Save Attendance</button>
+</form>
+
+{% elif selected_class and selected_standard %}
+<p>No students found for this class and standard.</p>
+{% endif %}
 
 </body>
 </html>
