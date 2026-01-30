@@ -1,43 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Monthly Attendance Chart</title>
+    <title>Monthly Attendance</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
 <div class="dashboard">
-    <h2>Monthly Attendance Chart</h2>
+    <h2>Monthly Attendance Report</h2>
 
-    <canvas id="attendanceChart"></canvas>
+    <table>
+        <tr>
+            <th>Subject</th>
+            <th>Total Classes</th>
+            <th>Present</th>
+            <th>Percentage</th>
+        </tr>
 
+        {% for row in data %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>
+                {% if row[1] > 0 %}
+                    {{ (row[2] * 100 / row[1]) | round(2) }}%
+                {% else %}
+                    0%
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
     <button onclick="location.href='/teacher'">Back</button>
 </div>
-
-<script>
-const subjects = {{ subjects | tojson }};
-const percentages = {{ percentages | tojson }};
-
-new Chart(document.getElementById("attendanceChart"), {
-    type: "bar",
-    data: {
-        labels: subjects,
-        datasets: [{
-            label: "Attendance %",
-            data: percentages,
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                max: 100
-            }
-        }
-    }
-});
-</script>
 
 </body>
 </html>

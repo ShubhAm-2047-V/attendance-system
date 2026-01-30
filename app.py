@@ -53,7 +53,7 @@ def login():
         password = request.form["password"]
         role = request.form["role"]
 
-        # HARD ADMIN LOGIN (SAFE FOR RENDER)
+        # HARD ADMIN LOGIN
         if username == "admin" and password == "admin123" and role == "Admin":
             session.clear()
             session["role"] = "Admin"
@@ -86,7 +86,7 @@ def logout():
     session.clear()
     return redirect("/")
 
-# ---------- ADMIN DASHBOARD ----------
+# ---------- ADMIN ----------
 @app.route("/admin")
 def admin_dashboard():
     if session.get("role") != "Admin":
@@ -100,7 +100,6 @@ def admin_dashboard():
 
     return render_template("admin_dashboard.html", users=users)
 
-# ---------- ADD USER ----------
 @app.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if session.get("role") != "Admin":
@@ -124,7 +123,6 @@ def add_user():
 
     return render_template("add_user.html")
 
-# ---------- DELETE USER ----------
 @app.route("/delete_user/<username>")
 def delete_user(username):
     if session.get("role") != "Admin":
@@ -140,7 +138,6 @@ def delete_user(username):
     conn.close()
 
     return redirect("/admin")
-
 
 # ---------- TEACHER ----------
 @app.route("/teacher")
@@ -172,6 +169,26 @@ def mark_attendance():
         return redirect("/teacher")
 
     return render_template("mark_attendance.html")
+
+# ---------- MONTHLY CHART (TEACHER) ----------
+@app.route("/monthly_chart")
+def monthly_chart():
+    if session.get("role") != "Teacher":
+        return redirect("/")
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT subject,
+               COUNT(*) AS total,
+               SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) AS present
+        FROM attendance
+        GROUP BY subject
+    """)
+    data = cur.fetchall()
+    conn.close()
+
+    return render_template("monthly_chart.html", data=data)
 
 # ---------- STUDENT ----------
 @app.route("/student")
