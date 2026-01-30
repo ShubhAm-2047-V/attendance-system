@@ -148,3 +148,7 @@ def student_dashboard():
 # ---------- RUN ----------
 if __name__ == "__main__":
     app.run()
+@app.route("/__test__")
+def test_route():
+    return "ADMIN ROUTE TEST OK"
+
