@@ -16,21 +16,29 @@ def get_db_connection():
     )
 
 # ===============================
-# HOME → LOGIN PAGE
+# HOME → LOGIN (GET ONLY)
 # ===============================
-@app.route("/")
+@app.route("/", methods=["GET"])
 def home():
     return render_template("login.html")
 
 # ===============================
-# TEACHER DASHBOARD
+# LOGIN (DUMMY, SAFE)
 # ===============================
-@app.route("/teacher")
+@app.route("/login", methods=["POST"])
+def login():
+    # no auth logic for now
+    return redirect(url_for("teacher_dashboard"))
+
+# ===============================
+# TEACHER DASHBOARD (GET ONLY)
+# ===============================
+@app.route("/teacher", methods=["GET"])
 def teacher_dashboard():
     return render_template("teacher_dashboard.html")
 
 # ===============================
-# MARK ATTENDANCE
+# MARK ATTENDANCE (GET + POST)
 # ===============================
 @app.route("/mark", methods=["GET", "POST"])
 def mark_attendance():
@@ -47,7 +55,11 @@ def mark_attendance():
             cursor = conn.cursor(dictionary=True)
 
             cursor.execute(
-                "SELECT id, roll_no, username FROM students WHERE class = %s AND standard = %s",
+                """
+                SELECT id, roll_no, username
+                FROM students
+                WHERE class = %s AND standard = %s
+                """,
                 (selected_class, selected_standard)
             )
 
@@ -62,7 +74,7 @@ def mark_attendance():
     )
 
 # ===============================
-# RUN APP
+# RUN
 # ===============================
 if __name__ == "__main__":
     app.run()

@@ -33,22 +33,20 @@
 <table border="1" cellpadding="8">
     <tr>
         <th>Roll No</th>
-        <th>Student Name</th>
+        <th>Name</th>
         <th>Present</th>
     </tr>
 
-    {% for student in students %}
+    {% for s in students %}
     <tr>
-        <td>{{ student.roll_no }}</td>
-        <td>{{ student.username }}</td>
-        <td>
-            <input type="checkbox" name="present_{{ student.id }}">
-        </td>
+        <td>{{ s.roll_no }}</td>
+        <td>{{ s.username }}</td>
+        <td><input type="checkbox"></td>
     </tr>
     {% endfor %}
 </table>
 {% elif selected_class and selected_standard %}
-<p>No students found for this class and standard.</p>
+<p>No students found.</p>
 {% endif %}
 
 </body>
