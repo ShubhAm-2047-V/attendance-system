@@ -9,21 +9,21 @@ app = Flask(__name__)
 # ===============================
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.environ.get("DB_HOST", "localhost"),
-        user=os.environ.get("DB_USER", "root"),
-        password=os.environ.get("DB_PASSWORD", ""),
-        database=os.environ.get("DB_NAME", "attendance")
+        host=os.environ.get("DB_HOST"),
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD"),
+        database=os.environ.get("DB_NAME")
     )
 
 # ===============================
-# HOME / LOGIN (example)
+# HOME
 # ===============================
 @app.route("/")
 def home():
     return redirect(url_for("mark_attendance"))
 
 # ===============================
-# MARK ATTENDANCE (FIXED)
+# MARK ATTENDANCE
 # ===============================
 @app.route("/mark", methods=["GET", "POST"])
 def mark_attendance():
@@ -35,7 +35,6 @@ def mark_attendance():
         selected_class = request.form.get("class")
         selected_standard = request.form.get("standard")
 
-        # Safety check (prevents 400 error)
         if selected_class and selected_standard:
             conn = get_db_connection()
             cursor = conn.cursor(dictionary=True)
@@ -56,7 +55,7 @@ def mark_attendance():
     )
 
 # ===============================
-# RUN APP
+# RUN
 # ===============================
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
