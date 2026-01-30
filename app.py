@@ -130,7 +130,6 @@ def delete_user(username):
     if session.get("role") != "Admin":
         return redirect("/")
 
-    # Prevent deleting main admin
     if username == "admin":
         return redirect("/admin")
 
@@ -141,6 +140,7 @@ def delete_user(username):
     conn.close()
 
     return redirect("/admin")
+
 
 # ---------- TEACHER ----------
 @app.route("/teacher")
