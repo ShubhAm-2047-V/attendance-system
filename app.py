@@ -1,215 +1,62 @@
-from flask import Flask, render_template, request, redirect, session
-import sqlite3
-from datetime import date
+from flask import Flask, render_template, request, redirect, url_for
+import mysql.connector
+import os
 
 app = Flask(__name__)
 
-# ---------- SESSION CONFIG (RENDER SAFE) ----------
-app.secret_key = "ATTENDANCE_SYSTEM_SECRET_2026"
-app.config.update(
-    SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=True
-)
-
-# ---------- DATABASE ----------
-def get_db():
-    return sqlite3.connect("attendance.db")
-
-def create_tables():
-    conn = get_db()
-    cur = conn.cursor()
-
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE,
-        password TEXT,
-        role TEXT
+# ===============================
+# DATABASE CONNECTION
+# ===============================
+def get_db_connection():
+    return mysql.connector.connect(
+        host=os.environ.get("DB_HOST", "localhost"),
+        user=os.environ.get("DB_USER", "root"),
+        password=os.environ.get("DB_PASSWORD", ""),
+        database=os.environ.get("DB_NAME", "attendance")
     )
-    """)
 
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS attendance (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        student_name TEXT,
-        subject TEXT,
-        status TEXT,
-        date TEXT
-    )
-    """)
+# ===============================
+# HOME / LOGIN (example)
+# ===============================
+@app.route("/")
+def home():
+    return redirect(url_for("mark_attendance"))
 
-    conn.commit()
-    conn.close()
-
-create_tables()
-
-# ---------- LOGIN ----------
-@app.route("/", methods=["GET", "POST"])
-def login():
-    error = None
-
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        role = request.form["role"]
-
-        # HARD ADMIN LOGIN
-        if username == "admin" and password == "admin123" and role == "Admin":
-            session.clear()
-            session["role"] = "Admin"
-            return redirect("/admin")
-
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT * FROM users WHERE username=? AND password=? AND role=?",
-            (username, password, role)
-        )
-        user = cur.fetchone()
-        conn.close()
-
-        if user:
-            session.clear()
-            session["role"] = role
-            if role == "Teacher":
-                return redirect("/teacher")
-            elif role == "Student":
-                return redirect("/student")
-        else:
-            error = "Invalid login details"
-
-    return render_template("login.html", error=error)
-
-# ---------- LOGOUT ----------
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/")
-
-# ---------- ADMIN ----------
-@app.route("/admin")
-def admin_dashboard():
-    if session.get("role") != "Admin":
-        return redirect("/")
-
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("SELECT username, role FROM users")
-    users = cur.fetchall()
-    conn.close()
-
-    return render_template("admin_dashboard.html", users=users)
-
-@app.route("/add_user", methods=["GET", "POST"])
-def add_user():
-    if session.get("role") != "Admin":
-        return redirect("/")
-
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        role = request.form["role"]
-
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO users (username, password, role) VALUES (?,?,?)",
-            (username, password, role)
-        )
-        conn.commit()
-        conn.close()
-
-        return redirect("/admin")
-
-    return render_template("add_user.html")
-
-@app.route("/delete_user/<username>")
-def delete_user(username):
-    if session.get("role") != "Admin":
-        return redirect("/")
-
-    if username == "admin":
-        return redirect("/admin")
-
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("DELETE FROM users WHERE username=?", (username,))
-    conn.commit()
-    conn.close()
-
-    return redirect("/admin")
-
-# ---------- TEACHER ----------
-@app.route("/teacher")
-def teacher_dashboard():
-    if session.get("role") != "Teacher":
-        return redirect("/")
-    return render_template("teacher_dashboard.html")
-
+# ===============================
+# MARK ATTENDANCE (FIXED)
+# ===============================
 @app.route("/mark", methods=["GET", "POST"])
 def mark_attendance():
-    if session.get("role") != "Teacher":
-        return redirect("/")
+    students = []
+    selected_class = ""
+    selected_standard = ""
 
     if request.method == "POST":
-        subject = request.form["subject"]
-        today = date.today().isoformat()
+        selected_class = request.form.get("class")
+        selected_standard = request.form.get("standard")
 
-        conn = get_db()
-        cur = conn.cursor()
+        # Safety check (prevents 400 error)
+        if selected_class and selected_standard:
+            conn = get_db_connection()
+            cursor = conn.cursor(dictionary=True)
 
-        for student in ["Rahul", "Aman"]:
-            cur.execute(
-                "INSERT INTO attendance (student_name, subject, status, date) VALUES (?,?,?,?)",
-                (student, subject, request.form[student], today)
+            cursor.execute(
+                "SELECT id, roll_no, username FROM students WHERE class = %s AND standard = %s",
+                (selected_class, selected_standard)
             )
 
-        conn.commit()
-        conn.close()
-        return redirect("/teacher")
+            students = cursor.fetchall()
+            conn.close()
 
-    return render_template("mark_attendance.html")
+    return render_template(
+        "mark_attendance.html",
+        students=students,
+        selected_class=selected_class,
+        selected_standard=selected_standard
+    )
 
-# ---------- MONTHLY CHART (TEACHER) ----------
-@app.route("/monthly_chart")
-def monthly_chart():
-    if session.get("role") != "Teacher":
-        return redirect("/")
-
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT subject,
-               COUNT(*) AS total,
-               SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) AS present
-        FROM attendance
-        GROUP BY subject
-    """)
-    data = cur.fetchall()
-    conn.close()
-
-    return render_template("monthly_chart.html", data=data)
-
-# ---------- STUDENT ----------
-@app.route("/student")
-def student_dashboard():
-    if session.get("role") != "Student":
-        return redirect("/")
-
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT subject,
-               COUNT(*) AS total,
-               SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) AS present
-        FROM attendance
-        GROUP BY subject
-    """)
-    data = cur.fetchall()
-    conn.close()
-
-    return render_template("student_dashboard.html", data=data)
-
-# ---------- RUN ----------
+# ===============================
+# RUN APP
+# ===============================
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
