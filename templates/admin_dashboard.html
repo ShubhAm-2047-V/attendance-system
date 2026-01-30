@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+    <h2>Admin Dashboard</h2>
+
+    <button onclick="location.href='/add_user'">Add User</button>
+    <button class="logout" onclick="location.href='/logout'">Logout</button>
+
+    <table>
+        <tr><th>Username</th><th>Role</th><th>Actions</th></tr>
+        {% for u in users %}
+        <tr>
+            <td>{{ u[1] }}</td>
+            <td>{{ u[2] }}</td>
+            <td>
+                <a href="/edit_user/{{ u[0] }}">Edit</a> |
+                <a href="/delete_user/{{ u[0] }}" onclick="return confirm('Delete user?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>

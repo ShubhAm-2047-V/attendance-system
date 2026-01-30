@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+    <h2>Attendance Report</h2>
+
+    <form method="POST">
+        <input type="date" name="date" required>
+        <button type="submit">View Report</button>
+    </form>
+
+    {% if records %}
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Date</th>
+        </tr>
+        {% for r in records %}
+        <tr>
+            <td>{{ r[0] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>{{ r[3] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <button onclick="location.href='/teacher'">Back</button>
+</div>
+
+</body>
+</html>

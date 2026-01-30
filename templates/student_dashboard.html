@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+    <h2>Student Dashboard</h2>
+
+    <table>
+        <tr><th>Subject</th><th>Present</th><th>Total</th><th>%</th></tr>
+        {% for r in data %}
+        <tr>
+            <td>{{ r[0] }}</td>
+            <td>{{ r[2] }}</td>
+            <td>{{ r[1] }}</td>
+            <td>{{ "%.2f"|format((r[2]/r[1])*100) }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <button class="logout" onclick="location.href='/logout'">Logout</button>
+</div>
+
+</body>
+</html>

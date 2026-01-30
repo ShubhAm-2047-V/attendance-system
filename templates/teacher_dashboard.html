@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+    <h2>Teacher Dashboard</h2>
+
+    <button onclick="location.href='/mark'">Mark Attendance</button>
+    <button onclick="location.href='/monthly_chart'">Monthly Chart</button>
+    <button class="logout" onclick="location.href='/logout'">Logout</button>
+</div>
+
+</body>
+</html>

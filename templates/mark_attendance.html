@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mark Attendance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="dashboard">
+    <h2>Mark Attendance</h2>
+    <form method="POST">
+        <select name="subject">
+            <option>Java</option>
+            <option>Python</option>
+        </select>
+
+        <table>
+            <tr><th>Name</th><th>Status</th></tr>
+            <tr>
+                <td>Rahul</td>
+                <td>
+                    <input type="radio" name="Rahul" value="Present" required> P
+                    <input type="radio" name="Rahul" value="Absent"> A
+                </td>
+            </tr>
+            <tr>
+                <td>Aman</td>
+                <td>
+                    <input type="radio" name="Aman" value="Present" required> P
+                    <input type="radio" name="Aman" value="Absent"> A
+                </td>
+            </tr>
+        </table>
+
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+</body>
+</html>
