@@ -1,15 +1,19 @@
 from flask import Flask, render_template, request, redirect, session
 import sqlite3
 from datetime import date
-import os
 
 app = Flask(__name__)
-app.secret_key = "attendance_secret_key"
 
-DB_NAME = "attendance.db"
+# 🔐 VERY IMPORTANT FOR RENDER
+app.secret_key = "ATTENDANCE_SYSTEM_SECRET_2026"
+app.config.update(
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=True
+)
 
+# ---------- DATABASE ----------
 def get_db():
-    return sqlite3.connect(DB_NAME)
+    return sqlite3.connect("attendance.db")
 
 def create_tables():
     conn = get_db()
@@ -34,47 +38,63 @@ def create_tables():
     )
     """)
 
-    cur.execute("SELECT COUNT(*) FROM users")
-    if cur.fetchone()[0] == 0:
-        cur.execute("INSERT INTO users VALUES (NULL,'admin','admin123','Admin')")
-        cur.execute("INSERT INTO users VALUES (NULL,'teacher1','1234','Teacher')")
-        cur.execute("INSERT INTO users VALUES (NULL,'student1','1234','Student')")
-
     conn.commit()
     conn.close()
 
 create_tables()
 
+# ---------- LOGIN (ADMIN FIXED) ----------
 @app.route("/", methods=["GET", "POST"])
 def login():
     error = None
-    if request.method == "POST":
-        u = request.form["username"]
-        p = request.form["password"]
-        r = request.form["role"]
 
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        role = request.form["role"]
+
+        # ✅ HARD ADMIN LOGIN (RENDER SAFE)
+        if username == "admin" and password == "admin123" and role == "Admin":
+            session.clear()
+            session["role"] = "Admin"
+            return redirect("/admin")
+
+        # NORMAL USER LOGIN
         conn = get_db()
         cur = conn.cursor()
         cur.execute(
             "SELECT * FROM users WHERE username=? AND password=? AND role=?",
-            (u, p, r)
+            (username, password, role)
         )
         user = cur.fetchone()
         conn.close()
 
         if user:
-            session["role"] = r
-            return redirect("/admin" if r=="Admin" else "/teacher" if r=="Teacher" else "/student")
+            session.clear()
+            session["role"] = role
+            if role == "Teacher":
+                return redirect("/teacher")
+            elif role == "Student":
+                return redirect("/student")
         else:
-            error = "Invalid login"
+            error = "Invalid login details"
 
     return render_template("login.html", error=error)
 
+# ---------- LOGOUT ----------
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
 
+# ---------- ADMIN ----------
+@app.route("/admin")
+def admin_dashboard():
+    if session.get("role") != "Admin":
+        return redirect("/")
+    return render_template("admin_dashboard.html")
+
+# ---------- TEACHER ----------
 @app.route("/teacher")
 def teacher_dashboard():
     if session.get("role") != "Teacher":
@@ -88,13 +108,15 @@ def mark_attendance():
 
     if request.method == "POST":
         today = date.today().isoformat()
+        subject = request.form["subject"]
+
         conn = get_db()
         cur = conn.cursor()
 
-        for s in ["Rahul", "Aman"]:
+        for student in ["Rahul", "Aman"]:
             cur.execute(
-                "INSERT INTO attendance VALUES (NULL,?,?,?,?)",
-                (s, request.form["subject"], request.form[s], today)
+                "INSERT INTO attendance (student_name, subject, status, date) VALUES (?,?,?,?)",
+                (student, subject, request.form[student], today)
             )
 
         conn.commit()
@@ -103,46 +125,26 @@ def mark_attendance():
 
     return render_template("mark_attendance.html")
 
-@app.route("/monthly_chart")
-def monthly_chart():
-    if session.get("role") != "Teacher":
-        return redirect("/")
-
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT subject,
-               COUNT(*) total,
-               SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) present
-        FROM attendance GROUP BY subject
-    """)
-    data = cur.fetchall()
-    conn.close()
-
-    subjects = [d[0] for d in data]
-    percentages = [(d[2]/d[1])*100 for d in data]
-
-    return render_template(
-        "monthly_chart.html",
-        subjects=subjects,
-        percentages=percentages
-    )
-
+# ---------- STUDENT ----------
 @app.route("/student")
 def student_dashboard():
     if session.get("role") != "Student":
         return redirect("/")
+
     conn = get_db()
     cur = conn.cursor()
     cur.execute("""
         SELECT subject,
                COUNT(*) total,
                SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) present
-        FROM attendance GROUP BY subject
+        FROM attendance
+        GROUP BY subject
     """)
     data = cur.fetchall()
     conn.close()
+
     return render_template("student_dashboard.html", data=data)
 
+# ---------- RUN ----------
 if __name__ == "__main__":
     app.run()
