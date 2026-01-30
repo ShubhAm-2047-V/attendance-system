@@ -13,14 +13,19 @@
     <button class="logout" onclick="location.href='/logout'">Logout</button>
 
     <table>
-        <tr><th>Username</th><th>Role</th><th>Actions</th></tr>
-        {% for u in users %}
         <tr>
-            <td>{{ u[1] }}</td>
-            <td>{{ u[2] }}</td>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>   <!-- username -->
+            <td>{{ user[1] }}</td>   <!-- role -->
             <td>
-                <a href="/edit_user/{{ u[0] }}">Edit</a> |
-                <a href="/delete_user/{{ u[0] }}" onclick="return confirm('Delete user?')">Delete</a>
+                <a href="#">Edit</a> |
+                <a href="#">Delete</a>
             </td>
         </tr>
         {% endfor %}

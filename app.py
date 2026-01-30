@@ -4,7 +4,7 @@ from datetime import date
 
 app = Flask(__name__)
 
-# 🔐 RENDER-SAFE SESSION CONFIG
+# ---------- SESSION CONFIG (RENDER SAFE) ----------
 app.secret_key = "ATTENDANCE_SYSTEM_SECRET_2026"
 app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
@@ -53,7 +53,7 @@ def login():
         password = request.form["password"]
         role = request.form["role"]
 
-        # ✅ HARD ADMIN LOGIN (RENDER SAFE)
+        # HARD ADMIN LOGIN (SAFE FOR RENDER)
         if username == "admin" and password == "admin123" and role == "Admin":
             session.clear()
             session["role"] = "Admin"
@@ -71,9 +71,12 @@ def login():
         if user:
             session.clear()
             session["role"] = role
-            return redirect("/teacher" if role == "Teacher" else "/student")
+            if role == "Teacher":
+                return redirect("/teacher")
+            elif role == "Student":
+                return redirect("/student")
         else:
-            error = "Invalid login"
+            error = "Invalid login details"
 
     return render_template("login.html", error=error)
 
@@ -97,7 +100,7 @@ def admin_dashboard():
 
     return render_template("admin_dashboard.html", users=users)
 
-# ---------- ADD USER (THIS FIXES YOUR ERROR) ----------
+# ---------- ADD USER ----------
 @app.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if session.get("role") != "Admin":
@@ -120,6 +123,24 @@ def add_user():
         return redirect("/admin")
 
     return render_template("add_user.html")
+
+# ---------- DELETE USER ----------
+@app.route("/delete_user/<username>")
+def delete_user(username):
+    if session.get("role") != "Admin":
+        return redirect("/")
+
+    # Prevent deleting main admin
+    if username == "admin":
+        return redirect("/admin")
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM users WHERE username=?", (username,))
+    conn.commit()
+    conn.close()
+
+    return redirect("/admin")
 
 # ---------- TEACHER ----------
 @app.route("/teacher")
@@ -162,8 +183,8 @@ def student_dashboard():
     cur = conn.cursor()
     cur.execute("""
         SELECT subject,
-               COUNT(*) total,
-               SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) present
+               COUNT(*) AS total,
+               SUM(CASE WHEN status='Present' THEN 1 ELSE 0 END) AS present
         FROM attendance
         GROUP BY subject
     """)
