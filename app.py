@@ -4,7 +4,7 @@ from datetime import date
 
 app = Flask(__name__)
 
-# 🔐 VERY IMPORTANT FOR RENDER
+# 🔐 RENDER-SAFE SESSION CONFIG
 app.secret_key = "ATTENDANCE_SYSTEM_SECRET_2026"
 app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
@@ -43,7 +43,7 @@ def create_tables():
 
 create_tables()
 
-# ---------- LOGIN (ADMIN FIXED) ----------
+# ---------- LOGIN ----------
 @app.route("/", methods=["GET", "POST"])
 def login():
     error = None
@@ -59,7 +59,6 @@ def login():
             session["role"] = "Admin"
             return redirect("/admin")
 
-        # NORMAL USER LOGIN
         conn = get_db()
         cur = conn.cursor()
         cur.execute(
@@ -72,12 +71,9 @@ def login():
         if user:
             session.clear()
             session["role"] = role
-            if role == "Teacher":
-                return redirect("/teacher")
-            elif role == "Student":
-                return redirect("/student")
+            return redirect("/teacher" if role == "Teacher" else "/student")
         else:
-            error = "Invalid login details"
+            error = "Invalid login"
 
     return render_template("login.html", error=error)
 
@@ -87,12 +83,43 @@ def logout():
     session.clear()
     return redirect("/")
 
-# ---------- ADMIN ----------
+# ---------- ADMIN DASHBOARD ----------
 @app.route("/admin")
 def admin_dashboard():
     if session.get("role") != "Admin":
         return redirect("/")
-    return render_template("admin_dashboard.html")
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT username, role FROM users")
+    users = cur.fetchall()
+    conn.close()
+
+    return render_template("admin_dashboard.html", users=users)
+
+# ---------- ADD USER (THIS FIXES YOUR ERROR) ----------
+@app.route("/add_user", methods=["GET", "POST"])
+def add_user():
+    if session.get("role") != "Admin":
+        return redirect("/")
+
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        role = request.form["role"]
+
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO users (username, password, role) VALUES (?,?,?)",
+            (username, password, role)
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect("/admin")
+
+    return render_template("add_user.html")
 
 # ---------- TEACHER ----------
 @app.route("/teacher")
@@ -107,8 +134,8 @@ def mark_attendance():
         return redirect("/")
 
     if request.method == "POST":
-        today = date.today().isoformat()
         subject = request.form["subject"]
+        today = date.today().isoformat()
 
         conn = get_db()
         cur = conn.cursor()
@@ -148,7 +175,3 @@ def student_dashboard():
 # ---------- RUN ----------
 if __name__ == "__main__":
     app.run()
-@app.route("/__test__")
-def test_route():
-    return "ADMIN ROUTE TEST OK"
-
