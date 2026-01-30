@@ -16,11 +16,18 @@ def get_db_connection():
     )
 
 # ===============================
-# HOME
+# HOME → LOGIN PAGE
 # ===============================
 @app.route("/")
 def home():
-    return redirect(url_for("mark_attendance"))
+    return render_template("login.html")
+
+# ===============================
+# TEACHER DASHBOARD
+# ===============================
+@app.route("/teacher")
+def teacher_dashboard():
+    return render_template("teacher_dashboard.html")
 
 # ===============================
 # MARK ATTENDANCE
@@ -55,7 +62,7 @@ def mark_attendance():
     )
 
 # ===============================
-# RUN
+# RUN APP
 # ===============================
 if __name__ == "__main__":
     app.run()
