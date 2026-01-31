@@ -57,6 +57,9 @@ class Attendance(db.Model):
     student = db.Column(db.String(80), nullable=False)
     status = db.Column(db.String(10), nullable=False)
     date = db.Column(db.Date, nullable=False)
+with app.app_context():
+    db.create_all()
+
 
 
 # =========================
