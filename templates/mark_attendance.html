@@ -1,53 +1,145 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Mark Attendance</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="dashboard-bg">
 
-<h2>Mark Attendance</h2>
+<div class="attendance-card">
 
-<form method="POST" action="/mark">
-    <label>Class:</label>
-    <select name="class" required>
-        <option value="">Select Class</option>
-        <option value="10" {% if selected_class=="10" %}selected{% endif %}>10</option>
-        <option value="11" {% if selected_class=="11" %}selected{% endif %}>11</option>
-        <option value="12" {% if selected_class=="12" %}selected{% endif %}>12</option>
-    </select>
+    <div class="attendance-header">
+        <h2>Mark Attendance</h2>
+        <p>Select attendance status for students</p>
+    </div>
 
-    <label>Standard:</label>
-    <select name="standard" required>
-        <option value="">Select Standard</option>
-        <option value="A" {% if selected_standard=="A" %}selected{% endif %}>A</option>
-        <option value="B" {% if selected_standard=="B" %}selected{% endif %}>B</option>
-        <option value="C" {% if selected_standard=="C" %}selected{% endif %}>C</option>
-    </select>
+    <!-- Progress -->
+    <div id="progress-text" class="progress-text"></div>
 
-    <button type="submit">Load Students</button>
-</form>
+    <!-- Student name -->
+    <div id="student-name" class="student-name"></div>
 
-<br><br>
+    <!-- Buttons -->
+    <div class="status-options">
+        <button class="pill present" onclick="submitAttendance('Present')">
+            Present
+        </button>
+        <button class="pill absent" onclick="submitAttendance('Absent')">
+            Absent
+        </button>
+    </div>
 
-{% if students %}
-<table border="1" cellpadding="8">
-    <tr>
-        <th>Roll No</th>
-        <th>Name</th>
-        <th>Present</th>
-    </tr>
+    <!-- Done Section -->
+    <div id="done-msg" class="done-msg hidden">
+        ✅ All students marked
 
+        <!-- Chart -->
+        <canvas id="attendanceChart" width="220" height="220"></canvas>
+
+        <!-- Absent list -->
+        <div class="absent-section">
+            <h4>Absent Students</h4>
+            <ol id="absent-list"></ol>
+        </div>
+
+        <!-- Exit -->
+        <a href="/teacher" class="exit-btn">
+            Exit to Dashboard
+        </a>
+    </div>
+
+</div>
+
+<script>
+const students = [
     {% for s in students %}
-    <tr>
-        <td>{{ s.roll_no }}</td>
-        <td>{{ s.username }}</td>
-        <td><input type="checkbox"></td>
-    </tr>
+        "{{ s.username }}",
     {% endfor %}
-</table>
-{% elif selected_class and selected_standard %}
-<p>No students found.</p>
-{% endif %}
+];
+
+let currentIndex = 0;
+let presentCount = 0;
+let absentCount = 0;
+let absentStudents = [];
+
+const nameBox = document.getElementById("student-name");
+const progressBox = document.getElementById("progress-text");
+const doneMsg = document.getElementById("done-msg");
+const buttons = document.querySelector(".status-options");
+const absentList = document.getElementById("absent-list");
+
+function showStudent() {
+    if (currentIndex < students.length) {
+        nameBox.innerText = students[currentIndex];
+        progressBox.innerText = `Student ${currentIndex + 1} / ${students.length}`;
+    } else {
+        nameBox.style.display = "none";
+        buttons.style.display = "none";
+        progressBox.style.display = "none";
+        doneMsg.classList.remove("hidden");
+        showChart();
+        showAbsentList();
+    }
+}
+
+function submitAttendance(status) {
+    fetch("/mark_single", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `student=${students[currentIndex]}&status=${status}`
+    }).then(res => {
+        if (res.ok) {
+            if (status === "Present") {
+                presentCount++;
+            } else {
+                absentCount++;
+                absentStudents.push(students[currentIndex]);
+            }
+            currentIndex++;
+            showStudent();
+        }
+    });
+}
+
+function showChart() {
+    const ctx = document.getElementById("attendanceChart").getContext("2d");
+    new Chart(ctx, {
+        type: "pie",
+        data: {
+            labels: ["Present", "Absent"],
+            datasets: [{
+                data: [presentCount, absentCount],
+                backgroundColor: ["#22c55e", "#ef4444"]
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { position: "bottom" }
+            }
+        }
+    });
+}
+
+function showAbsentList() {
+    absentList.innerHTML = "";
+    if (absentStudents.length === 0) {
+        absentList.innerHTML = "<li>No absent students 🎉</li>";
+    } else {
+        absentStudents.forEach((name, index) => {
+            const li = document.createElement("li");
+            li.textContent = name;
+            absentList.appendChild(li);
+        });
+    }
+}
+
+// init
+showStudent();
+</script>
 
 </body>
 </html>

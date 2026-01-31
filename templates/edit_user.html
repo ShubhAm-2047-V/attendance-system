@@ -1,29 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add User</title>
+    <title>Edit User</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script>
+        function toggleStudentFields() {
+            const role = document.getElementById("role").value;
+            const studentFields = document.getElementById("student-fields");
+
+            if (role === "student") {
+                studentFields.style.display = "block";
+            } else {
+                studentFields.style.display = "none";
+            }
+        }
+    </script>
 </head>
-<body>
 
-<div class="dashboard">
-    <h2>Add User</h2>
+<body class="dashboard-bg">
 
-    <form method="POST">
-        <input name="username" placeholder="Username" required>
-        <input name="password" placeholder="Password" required>
+<div class="dashboard-card">
 
-        <select name="role" required>
-            <option value="Teacher">Teacher</option>
-            <option value="Student">Student</option>
-            <option value="Admin">Admin</option>
+    <div class="dashboard-header">
+        <h2>Edit User</h2>
+        <p>Update user details</p>
+    </div>
+
+    <form method="POST" class="app-form">
+
+        <input type="text"
+               name="username"
+               value="{{ user.username }}"
+               required>
+
+        <select name="role"
+                id="role"
+                onchange="toggleStudentFields()"
+                required>
+            <option value="admin" {{ 'selected' if user.role=='admin' else '' }}>Admin</option>
+            <option value="teacher" {{ 'selected' if user.role=='teacher' else '' }}>Teacher</option>
+            <option value="student" {{ 'selected' if user.role=='student' else '' }}>Student</option>
         </select>
 
-        <button type="submit">Add User</button>
+        <div id="student-fields"
+             style="display: {{ 'block' if user.role=='student' else 'none' }};">
+
+            <select name="year">
+                <option value="">Select Year</option>
+                <option value="FY" {{ 'selected' if user.year=='FY' else '' }}>FY</option>
+                <option value="SY" {{ 'selected' if user.year=='SY' else '' }}>SY</option>
+                <option value="TY" {{ 'selected' if user.year=='TY' else '' }}>TY</option>
+            </select>
+
+            <select name="division">
+                <option value="">Select Division</option>
+                <option value="A" {{ 'selected' if user.division=='A' else '' }}>A</option>
+                <option value="B" {{ 'selected' if user.division=='B' else '' }}>B</option>
+                <option value="C" {{ 'selected' if user.division=='C' else '' }}>C</option>
+            </select>
+
+        </div>
+
+        <input type="text"
+               name="phone"
+               value="{{ user.phone or '' }}"
+               placeholder="Phone number">
+
+        <button type="submit" class="submit-btn">
+            Update User
+        </button>
+
     </form>
 
-    <button onclick="location.href='/admin'">Back</button>
+    <a href="/admin" class="exit-btn">Back</a>
+
 </div>
+
+<script>
+    toggleStudentFields();
+</script>
 
 </body>
 </html>

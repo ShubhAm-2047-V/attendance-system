@@ -1,15 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>Login | Attendance System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
 
-<h2>Login</h2>
+<body class="app-bg">
 
-<form method="POST" action="/login">
-    <button type="submit">Login as Teacher</button>
-</form>
+<div class="app-card">
+
+    <div class="app-header">
+        <h2>SCI Information</h2>
+        <p>Stay connected with your classroom community</p>
+    </div>
+
+    <form method="POST" class="app-form">
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+        >
+
+        <button type="submit">
+            LOGIN
+        </button>
+
+    </form>
+
+    {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+</div>
 
 </body>
 </html>

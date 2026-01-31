@@ -1,40 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Monthly Attendance</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="dashboard-bg">
 
-<div class="dashboard">
-    <h2>Monthly Attendance Report</h2>
+<div class="dashboard-card">
 
-    <table>
-        <tr>
-            <th>Subject</th>
-            <th>Total Classes</th>
-            <th>Present</th>
-            <th>Percentage</th>
-        </tr>
+    <div class="dashboard-header">
+        <h2>Monthly Attendance</h2>
+        <p>Attendance overview for this month</p>
+    </div>
 
-        {% for row in data %}
-        <tr>
-            <td>{{ row[0] }}</td>
-            <td>{{ row[1] }}</td>
-            <td>{{ row[2] }}</td>
-            <td>
-                {% if row[1] > 0 %}
-                    {{ (row[2] * 100 / row[1]) | round(2) }}%
+    <!-- ✅ SUMMARY COUNTS (FIXED) -->
+    <div style="display:flex; gap:12px; justify-content:center; margin-bottom:18px;">
+        <span class="role-badge role-student">
+            Present: {{ present_count }}
+        </span>
+        <span class="role-badge role-admin">
+            Absent: {{ absent_count }}
+        </span>
+    </div>
+
+    <!-- ✅ ATTENDANCE TABLE -->
+    <div class="table-wrapper">
+        <table class="attendance-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in records %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ r.student }}</td>
+                    <td>{{ r.date.strftime('%d-%m-%Y') }}</td>
+                    <td>
+                        {% if r.status == "Present" %}
+                            <span class="role-badge role-student">Present</span>
+                        {% else %}
+                            <span class="role-badge role-admin">Absent</span>
+                        {% endif %}
+                    </td>
+                </tr>
                 {% else %}
-                    0%
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+                <tr>
+                    <td colspan="4" style="text-align:center;color:#6b7280;">
+                        No attendance records found
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    <br>
-    <button onclick="location.href='/teacher'">Back</button>
+    <!-- BACK BUTTON -->
+    <a href="/teacher" class="logout-btn-full" style="margin-top:16px;">
+        Exit to Dashboard
+    </a>
+
 </div>
 
 </body>

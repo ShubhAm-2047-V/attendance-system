@@ -1,51 +1,389 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+/* =========================
+   GLOBAL BACKGROUND
+========================= */
+.app-bg,
+.dashboard-bg {
+    background: #f3efe8;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
-body {
-    background: #f4f6f8;
+/* =========================
+   LOGIN APP CARD
+========================= */
+.app-card {
+    width: 300px;
+    height: 480px;
+    background: #0b3a6f;
+    border-radius: 32px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    padding: 35px 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
 }
 
-.container, .dashboard {
-    max-width: 800px;
-    margin: 40px auto;
+.app-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.app-header p {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+.app-form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 20px;
+    border: none;
+    font-size: 14px;
+}
+
+.app-form button {
+    width: 100%;
+    padding: 12px;
+    background: #f59e0b;
+    color: white;
+    border-radius: 22px;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.app-form button:hover {
+    background: #fbbf24;
+}
+
+.error {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #fecaca;
+}
+
+/* =========================
+   DASHBOARD CARD
+========================= */
+.dashboard-card {
+    width: 360px;
     background: white;
-    padding: 25px;
-    border-radius: 6px;
+    border-radius: 28px;
+    padding: 30px 22px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+    text-align: center;
 }
 
-h2 {
+.dashboard-header p {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+/* =========================
+   ACTION CARDS (FIXED)
+========================= */
+.action-card {
+    display: block;
+    width: 100%;
+    background: #0b3a6f;
+    color: white;
+    padding: 22px;
+    border-radius: 22px;
+    text-decoration: none;
+    text-align: center;
+    margin-bottom: 18px;
+    box-sizing: border-box;
+}
+
+.action-card h3 {
+    margin-bottom: 6px;
+    font-size: 18px;
+}
+
+.action-card p {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+.action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* =========================
+   LOGOUT BUTTON
+========================= */
+.logout-btn-full {
+    display: block;
+    margin-top: 30px;
+    padding: 12px;
+    background: #dc2626;
+    color: white;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* =========================
+   ATTENDANCE CARD
+========================= */
+.attendance-card {
+    width: 360px;
+    background: white;
+    border-radius: 28px;
+    padding: 30px 22px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+}
+
+.attendance-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.attendance-header p {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* =========================
+   STUDENT FLOW
+========================= */
+.student-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.status-options {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.pill {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.pill.present {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.pill.absent {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* =========================
+   PROGRESS + DONE
+========================= */
+.progress-text {
+    text-align: center;
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+.done-msg {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #16a34a;
+    font-weight: 600;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+/* =========================
+   EXIT BUTTON
+========================= */
+.exit-btn {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 10px 18px;
+    background: #111827;
+    color: white;
+    border-radius: 18px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.exit-btn:hover {
+    background: #1f2937;
+}
+
+/* =========================
+   ABSENT LIST
+========================= */
+.absent-section {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.absent-section h4 {
+    margin-bottom: 8px;
+    font-size: 15px;
+    color: #111827;
+}
+
+.absent-section ol {
+    padding-left: 20px;
+    font-size: 14px;
+    color: #374151;
+}
+
+/* =========================
+   MONTHLY REPORT
+========================= */
+.monthly-card {
+    width: 720px;
+    background: white;
+    border-radius: 28px;
+    padding: 30px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+}
+
+.monthly-header {
     text-align: center;
     margin-bottom: 20px;
 }
 
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+.monthly-header p {
+    font-size: 14px;
+    color: #6b7280;
 }
 
-button {
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 4px;
+.summary-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
 }
 
-.logout {
-    background: #dc2626;
+.summary {
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
-table {
+.summary.present {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.summary.absent {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.table-wrapper {
+    margin-top: 20px;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+.attendance-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-table, th, td {
-    border: 1px solid #ccc;
-    padding: 8px;
-    text-align: center;
+.attendance-table th,
+.attendance-table td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 14px;
+}
+
+.attendance-table th {
+    background: #f3f4f6;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-badge.present {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.absent {
+    background: #fee2e2;
+    color: #991b1b;
+}
+/* ===== Gen-Z Admin UI ===== */
+
+/* Role badges */
+.role-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.role-admin {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.role-teacher {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.role-student {
+    background: #dcfce7;
+    color: #166534;
+}
+
+/* Action buttons */
+.action-btn {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.action-edit {
+    background: #e0f2fe;
+    color: #0369a1;
+    margin-right: 6px;
+}
+
+.action-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Admin table tweaks */
+.attendance-table td,
+.attendance-table th {
+    vertical-align: middle;
+}
+
+.attendance-table tr:hover {
+    background: #f9fafb;
 }

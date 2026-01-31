@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Initial Setup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="dashboard-bg">
+
+<div class="dashboard-card">
+    <div class="dashboard-header">
+        <h2>Initial Setup</h2>
+        <p>Enter secret key to create admin</p>
+    </div>
+
+    <form method="POST">
+        <input type="password" name="key" placeholder="Secret Key" required>
+
+        <button type="submit" class="submit-btn">
+            Create Admin
+        </button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

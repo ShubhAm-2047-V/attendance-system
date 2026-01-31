@@ -1,13 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
+<body class="dashboard-bg">
 
-<h2>Teacher Dashboard</h2>
+<div class="dashboard-card">
 
-<a href="/mark">Mark Attendance</a>
+    <div class="dashboard-header">
+        <h2>Teacher Dashboard</h2>
+        <p>Manage attendance efficiently</p>
+    </div>
+
+    <!-- Mark Attendance -->
+    <a href="{{ url_for('select_class', next='/mark_attendance') }}" class="action-card">
+        <h3>Mark Attendance</h3>
+        <p>Record today’s attendance</p>
+    </a>
+
+    <!-- Monthly Report -->
+    <a href="{{ url_for('select_class', next='/monthly_chart') }}" class="action-card">
+        <h3>Monthly Report</h3>
+        <p>View attendance summary</p>
+    </a>
+
+    <!-- Logout -->
+    <a href="{{ url_for('logout') }}" class="logout-btn-full">
+        Logout
+    </a>
+
+</div>
 
 </body>
 </html>

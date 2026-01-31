@@ -1,27 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Student Dashboard</title>
+    <meta charset="UTF-8">
+    <title>My Attendance</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
 
-<div class="dashboard">
-    <h2>Student Dashboard</h2>
+<body class="dashboard-bg">
 
-    <table>
-        <tr><th>Subject</th><th>Present</th><th>Total</th><th>%</th></tr>
-        {% for r in data %}
-        <tr>
-            <td>{{ r[0] }}</td>
-            <td>{{ r[2] }}</td>
-            <td>{{ r[1] }}</td>
-            <td>{{ "%.2f"|format((r[2]/r[1])*100) }}%</td>
-        </tr>
+<div class="attendance-card">
+
+    <!-- Header -->
+    <div class="attendance-header">
+        <h2>👋 Hi {{ current_user.username }}</h2>
+        <p>Your attendance overview</p>
+    </div>
+
+    <!-- 🔔 Notifications (today only already handled in backend) -->
+    {% if notifications %}
+    <div style="margin-bottom:16px;">
+        <h4>Notifications</h4>
+        {% for n in notifications %}
+            <div style="background:#fee2e2;padding:8px 10px;border-radius:10px;margin-bottom:8px;">
+                {{ n.message }}
+            </div>
         {% endfor %}
-    </table>
+    </div>
+    {% endif %}
 
-    <button class="logout" onclick="location.href='/logout'">Logout</button>
+    <!-- 📊 Stats -->
+    <div class="summary-row">
+        <div class="summary present">
+            Present<br>
+            <strong>{{ present_count }}</strong>
+        </div>
+
+        <div class="summary absent">
+            Absent<br>
+            <strong>{{ absent_count }}</strong>
+        </div>
+    </div>
+
+    <div class="summary-row">
+        <div class="summary present">
+            🔥 Streak<br>
+            <strong>{{ streak }}</strong> days
+        </div>
+    </div>
+
+    <!-- 📋 Attendance List -->
+    <div class="table-wrapper">
+        <table class="attendance-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in records %}
+                {% set is_today = row.date == today %}
+
+                <tr style="{% if is_today %}background:#f0fdf4;{% endif %}">
+                    <td>
+                        {{ row.date.strftime('%d-%m-%Y') }}
+                        {% if is_today %}
+                            <span style="
+                                margin-left:6px;
+                                font-size:11px;
+                                background:#22c55e;
+                                color:white;
+                                padding:2px 8px;
+                                border-radius:999px;
+                                font-weight:600;
+                            ">
+                                Today
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if row.status == "Present" %}
+                            <span class="status-badge present">Present</span>
+                        {% else %}
+                            <span class="status-badge absent">Absent</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="2" style="text-align:center;color:#6b7280;">
+                        No attendance records yet
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Logout -->
+    <a href="{{ url_for('logout') }}" class="logout-btn-full">
+        Logout
+    </a>
+
 </div>
 
 </body>
