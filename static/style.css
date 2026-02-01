@@ -909,3 +909,55 @@ body {
     background: rgba(239,68,68,0.2);
     color: #7f1d1d;
 }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.brand-text h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.brand-text p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.85;
+}
+/* Brand header */
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+.brand img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+.brand-text h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.brand-text p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.85;
+}

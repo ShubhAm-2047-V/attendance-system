@@ -1,54 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector("form");
-    if (form) {
-      form.addEventListener("submit", () => {
-        document.body.classList.add("login-transition");
-      });
-    }
-  });
-</script>
-
     <meta charset="UTF-8">
-    <title>Login | Attendance System</title>
+    <title>Login | Rollup</title>
 
+    <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Page transition -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+            if (!form) return;
+
+            form.addEventListener("submit", () => {
+                document.body.classList.add("login-transition");
+            });
+        });
+    </script>
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector("form");
-    if (!form) return;
-
-    form.addEventListener("submit", () => {
-        document.body.classList.add("page-exit");
-    });
-});
-</script>
-
 
 <body class="app-bg">
 
 <div class="login-container">
 
-
-
     <div class="login-card">
 
+        <!-- BRAND HEADER -->
+        <div class="brand">
+            <!-- If you add logo later, just uncomment this -->
+            <!-- <img src="{{ url_for('static', filename='logo.png') }}" alt="Rollup Logo"> -->
+
+            <div class="brand-text">
+                <h1>ROLLUP</h1>
+                <p>Smart Attendance System</p>
+            </div>
+        </div>
+
+        <!-- LOGIN FORM -->
         <form method="POST" class="login-form">
 
-<h1 class="app-title">AttendEase</h1>
-<p class="app-subtitle">Smart Attendance System</p>
-
-
             <label>Username</label>
-            <input type="text" name="username" placeholder="Enter your username" required>
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                required
+            >
 
             <label>Password</label>
-            <input type="password" name="password" placeholder="Enter your password" required>
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
 
             <button type="submit">LOGIN</button>
 
