@@ -1,34 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Teacher Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard | AttendEase</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="dashboard-bg">
 
-<div class="dashboard-card">
+<body class="dashboard-bg admin-page page-enter">
 
-    <div class="dashboard-header">
-        <h2>Teacher Dashboard</h2>
-        <p>Manage attendance efficiently</p>
+<div class="admin-container">
+
+    <div class="admin-card" style="max-width: 540px;">
+
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h2>Teacher Dashboard</h2>
+            <p>Manage attendance efficiently</p>
+        </div>
+
+        <!-- MARK ATTENDANCE -->
+        <div class="teacher-card" style="margin-bottom:20px;">
+
+            <div class="icon">📝</div>
+
+            <div class="content">
+                <h3>Mark Attendance</h3>
+                <p>Select class to record today’s attendance</p>
+
+                <form method="GET"
+                      action="{{ url_for('mark_attendance') }}"
+                      class="teacher-form">
+
+                    <select name="year" required>
+                        <option value="">Select Year</option>
+                        <option value="FY">FY</option>
+                        <option value="SY">SY</option>
+                        <option value="TY">TY</option>
+                    </select>
+
+                    <select name="division" required>
+                        <option value="">Select Division</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+
+                    <button type="submit" class="primary-btn">
+                        Start Attendance
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- MONTHLY REPORT -->
+        <div class="teacher-card">
+
+            <div class="icon">📊</div>
+
+            <div class="content">
+                <h3>Monthly Report</h3>
+                <p>View attendance summary</p>
+
+                <form method="GET"
+                      action="{{ url_for('monthly_chart') }}"
+                      class="teacher-form">
+
+                    <select name="year" required>
+                        <option value="">Select Year</option>
+                        <option value="FY">FY</option>
+                        <option value="SY">SY</option>
+                        <option value="TY">TY</option>
+                    </select>
+
+                    <select name="division" required>
+                        <option value="">Select Division</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+
+                    <button type="submit" class="primary-btn">
+                        View Report
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <a href="{{ url_for('logout') }}" class="logout-btn-full">
+            Logout
+        </a>
+
     </div>
-
-    <!-- Mark Attendance -->
-    <a href="{{ url_for('select_class', next='/mark_attendance') }}" class="action-card">
-        <h3>Mark Attendance</h3>
-        <p>Record today’s attendance</p>
-    </a>
-
-    <!-- Monthly Report -->
-    <a href="{{ url_for('select_class', next='/monthly_chart') }}" class="action-card">
-        <h3>Monthly Report</h3>
-        <p>View attendance summary</p>
-    </a>
-
-    <!-- Logout -->
-    <a href="{{ url_for('logout') }}" class="logout-btn-full">
-        Logout
-    </a>
 
 </div>
 

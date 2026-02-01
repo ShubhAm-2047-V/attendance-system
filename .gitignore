@@ -1,5 +1,4 @@
 __pycache__/
-*.pyc
 instance/
-attendance.db
+*.db
 .env

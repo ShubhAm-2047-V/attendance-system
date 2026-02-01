@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CC – Full Student Attendance Report</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="dashboard-bg admin-page page-enter">
+
+<div class="admin-container">
+
+    <div class="admin-card glass-card" style="max-width: 1000px;">
+
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h2>📊 Full Student Attendance Report</h2>
+            <p>Class Coordinator View</p>
+        </div>
+
+        {% if report and report|length > 0 %}
+
+        <div class="table-wrapper">
+            <table class="attendance-table">
+
+                <!-- TABLE HEAD -->
+                <thead>
+                    <tr>
+                        <th>Student</th>
+
+                        {# Dynamically show subject columns #}
+                        {% for key, value in report[0].items() %}
+                            {% if key not in ['student', 'total'] %}
+                                <th>{{ key }}</th>
+                            {% endif %}
+                        {% endfor %}
+
+                        <th>Total %</th>
+                    </tr>
+                </thead>
+
+                <!-- TABLE BODY -->
+                <tbody>
+                    {% for student in report %}
+                    <tr>
+                        <td>{{ student.student }}</td>
+
+                        {% for key, value in student.items() %}
+                            {% if key not in ['student', 'total'] %}
+                                <td>{{ value }}%</td>
+                            {% endif %}
+                        {% endfor %}
+
+                        <td><strong>{{ student.total }}%</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        {% else %}
+            <p class="empty-row" style="margin-top:20px;">
+                No attendance data available
+            </p>
+        {% endif %}
+
+        <!-- Logout -->
+        <a href="{{ url_for('logout') }}" class="logout-btn-full">
+            Logout
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,286 +1,488 @@
 /* =========================
-   GLOBAL BACKGROUND
+   GLOBAL
 ========================= */
-.app-bg,
-.dashboard-bg {
-    background: #f3efe8;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+/* =========================
+   LOGIN & APP BACKGROUND
+========================= */
+.app-bg {
     min-height: 100vh;
+    background:
+        radial-gradient(circle at 15% 20%, #1e3a8a 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, #2563eb 0%, transparent 45%),
+        linear-gradient(135deg, #020617, #020617);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: "Segoe UI", Arial, sans-serif;
 }
 
 /* =========================
-   LOGIN APP CARD
+   DASHBOARD BACKGROUND
 ========================= */
-.app-card {
-    width: 300px;
-    height: 480px;
-    background: #0b3a6f;
-    border-radius: 32px;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
-    padding: 35px 25px;
+.dashboard-bg {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 20%, #1e3a8a 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, #2563eb 0%, transparent 45%),
+        linear-gradient(135deg, #020617, #020617);
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    color: white;
-}
-
-.app-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.app-header p {
-    font-size: 14px;
-    opacity: 0.85;
-}
-
-.app-form input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 16px;
-    border-radius: 20px;
-    border: none;
-    font-size: 14px;
-}
-
-.app-form button {
-    width: 100%;
-    padding: 12px;
-    background: #f59e0b;
-    color: white;
-    border-radius: 22px;
-    font-weight: 600;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-}
-
-.app-form button:hover {
-    background: #fbbf24;
-}
-
-.error {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 13px;
-    color: #fecaca;
+    align-items: center;
 }
 
 /* =========================
-   DASHBOARD CARD
+   LOGIN CONTAINER
 ========================= */
-.dashboard-card {
-    width: 360px;
-    background: white;
-    border-radius: 28px;
-    padding: 30px 22px;
-    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
-    text-align: center;
-}
-
-.dashboard-header p {
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 30px;
+.login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 /* =========================
-   ACTION CARDS (FIXED)
+   LOGIN GLASS CARD
 ========================= */
-.action-card {
-    display: block;
-    width: 100%;
-    background: #0b3a6f;
-    color: white;
-    padding: 22px;
-    border-radius: 22px;
-    text-decoration: none;
-    text-align: center;
-    margin-bottom: 18px;
-    box-sizing: border-box;
+.login-card {
+    width: min(540px, 90%);
+    padding: 55px 60px;
+    border-radius: 26px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.18),
+        rgba(255, 255, 255, 0.35)
+    );
+
+    backdrop-filter: blur(26px) saturate(180%);
+    -webkit-backdrop-filter: blur(26px) saturate(180%);
+
+    border: 1px solid rgba(255, 255, 255, 0.35);
+
+    box-shadow:
+        0 50px 90px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 
-.action-card h3 {
+/* =========================
+   LOGIN TITLE
+========================= */
+.app-title {
+    font-size: 30px;
+    font-weight: 700;
     margin-bottom: 6px;
-    font-size: 18px;
+    color: #020617;
 }
 
-.action-card p {
-    font-size: 14px;
-    opacity: 0.85;
-}
-
-.action-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+.app-subtitle {
+    font-size: 15px;
+    color: #475569;
+    margin-bottom: 35px;
 }
 
 /* =========================
-   LOGOUT BUTTON
+   LOGIN FORM
 ========================= */
-.logout-btn-full {
+.login-form {
+    max-width: 420px;
+}
+
+.login-form label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
     display: block;
-    margin-top: 30px;
-    padding: 12px;
-    background: #dc2626;
-    color: white;
-    border-radius: 20px;
-    text-decoration: none;
-    font-weight: 600;
+    color: #020617;
 }
 
-/* =========================
-   ATTENDANCE CARD
-========================= */
-.attendance-card {
-    width: 360px;
-    background: white;
-    border-radius: 28px;
-    padding: 30px 22px;
-    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
-}
-
-.attendance-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.attendance-header p {
+.login-form input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
     font-size: 14px;
-    color: #6b7280;
+    outline: none;
+    background: rgba(255,255,255,0.85);
+}
+
+.login-form input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
 }
 
 /* =========================
-   STUDENT FLOW
+   LOGIN BUTTON
 ========================= */
-.student-name {
-    font-size: 18px;
+.login-form button {
+    margin-top: 10px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    font-size: 15px;
     font-weight: 600;
-    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-form button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(245,158,11,0.4);
+}
+
+/* =========================
+   ERROR
+========================= */
+.error {
+    margin-top: 15px;
+    background: rgba(239,68,68,0.18);
+    color: #991b1b;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 13px;
     text-align: center;
 }
 
-.status-options {
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 768px) {
+    .login-card {
+        width: 90%;
+        padding: 45px 30px;
+    }
+}
+
+/* =========================
+   LOGIN TRANSITION
+========================= */
+body {
+    transition: background-position 1s ease, opacity 0.6s ease;
+}
+
+.login-transition {
+    background-position: 100% 100%;
+    opacity: 0.95;
+}
+
+/* =========================
+   ADMIN DASHBOARD UI
+========================= */
+.admin-page {
+    padding: 60px 20px;
+}
+
+.admin-container {
     display: flex;
     justify-content: center;
-    gap: 12px;
-}
-
-.pill {
-    border: none;
-    padding: 8px 14px;
-    border-radius: 14px;
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.pill.present {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.pill.absent {
-    background: #fee2e2;
-    color: #991b1b;
 }
 
 /* =========================
-   PROGRESS + DONE
+   ADMIN GLASS CARD
 ========================= */
-.progress-text {
-    text-align: center;
-    font-size: 14px;
-    color: #6b7280;
-    margin-bottom: 12px;
+.admin-card {
+    width: min(1000px, 95%);
+    padding: 40px;
+    border-radius: 28px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.55),
+        rgba(255, 255, 255, 0.30)
+    );
+
+    backdrop-filter: blur(26px) saturate(180%);
+    -webkit-backdrop-filter: blur(26px) saturate(180%);
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    box-shadow:
+        0 50px 100px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.45);
 }
 
-.done-msg {
+/* =========================
+   ADMIN HEADINGS
+========================= */
+.admin-card h1,
+.admin-card h2 {
+    font-size: 28px;
+    margin-bottom: 6px;
+    color: #020617;
+}
+
+.admin-card p {
+    color: #475569;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   ADMIN TABLE
+========================= */
+.admin-card table {
+    width: 100%;
+    border-collapse: collapse;
     margin-top: 20px;
-    font-size: 16px;
-    color: #16a34a;
-    font-weight: 600;
-    text-align: center;
 }
 
-.hidden {
-    display: none;
-}
-
-/* =========================
-   EXIT BUTTON
-========================= */
-.exit-btn {
-    display: inline-block;
-    margin-top: 16px;
-    padding: 10px 18px;
-    background: #111827;
-    color: white;
-    border-radius: 18px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.exit-btn:hover {
-    background: #1f2937;
-}
-
-/* =========================
-   ABSENT LIST
-========================= */
-.absent-section {
-    margin-top: 20px;
+.admin-card th,
+.admin-card td {
+    padding: 14px;
     text-align: left;
 }
 
-.absent-section h4 {
-    margin-bottom: 8px;
-    font-size: 15px;
-    color: #111827;
-}
-
-.absent-section ol {
-    padding-left: 20px;
+.admin-card th {
     font-size: 14px;
-    color: #374151;
+    color: #334155;
 }
 
+.admin-card tr {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.admin-card tr:hover {
+    background: rgba(255,255,255,0.25);
+}
 /* =========================
-   MONTHLY REPORT
+   PAGE EXIT (LOGIN → DASHBOARD)
 ========================= */
-.monthly-card {
-    width: 720px;
-    background: white;
-    border-radius: 28px;
-    padding: 30px;
-    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+.page-exit {
+    animation: exitFade 0.6s ease forwards;
 }
 
-.monthly-header {
+@keyframes exitFade {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+    }
+    100% {
+        opacity: 0;
+        filter: blur(8px);
+    }
+}
+/* =========================
+   PAGE ENTER (DASHBOARD LOAD)
+========================= */
+.page-enter {
+    animation: enterFade 0.8s ease forwards;
+}
+
+@keyframes enterFade {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+/* =========================
+   BACKGROUND MOTION
+========================= */
+.app-bg,
+.dashboard-bg {
+    background-size: 200% 200%;
+    animation: bgMove 10s ease infinite;
+}
+
+@keyframes bgMove {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+/* =========================
+   TABLE SWITCHER (FIXED)
+========================= */
+.table-switcher {
+    position: relative;
+    min-height: 300px; /* IMPORTANT: prevents collapse */
+}
+
+/* Table panels */
+.table-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+    opacity: 0;
+    transform: translateX(40px);
+    pointer-events: none;
+
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+/* Active table */
+.table-view.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+    position: relative;
+}
+
+/* Exit animation */
+.table-view.exit {
+    opacity: 0;
+    transform: translateX(-40px);
+}
+/* =========================
+   TEACHER DASHBOARD CARDS
+========================= */
+.teacher-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.teacher-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 18px 20px;
+    border-radius: 18px;
+    text-decoration: none;
+
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(255,255,255,0.35);
+    color: #0f172a;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+}
+
+.teacher-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,0.55);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+.teacher-card .icon {
+    font-size: 28px;
+}
+
+.teacher-card h3 {
+    font-size: 17px;
+    margin-bottom: 4px;
+}
+
+.teacher-card p {
+    font-size: 14px;
+    color: #475569;
+}
+/* =========================
+   ATTENDANCE CARD UPGRADE
+========================= */
+.glass-card {
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 40px 90px rgba(0,0,0,0.4);
+}
+
+.attendance-card {
+    width: min(480px, 90%);
+    padding: 40px;
+    border-radius: 26px;
+}
+
+.student-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 20px 0;
+}
+
+.done-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 18px;
     text-align: center;
-    margin-bottom: 20px;
+}
+
+.chart-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+/* =========================
+   MONTHLY REPORT UI
+========================= */
+
+.monthly-container {
+    display: flex;
+    justify-content: center;
+    padding: 60px 20px;
+}
+
+.monthly-card {
+    width: min(900px, 95%);
+    padding: 40px;
+    border-radius: 26px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.15),
+        rgba(255,255,255,0.35)
+    );
+
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    box-shadow:
+        0 40px 90px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+
+    animation: fadeUp 0.6s ease;
+}
+
+.monthly-header h2 {
+    font-size: 26px;
+    margin-bottom: 6px;
 }
 
 .monthly-header p {
-    font-size: 14px;
-    color: #6b7280;
+    color: #64748b;
+    margin-bottom: 20px;
 }
 
+/* Summary */
 .summary-row {
     display: flex;
-    justify-content: center;
     gap: 16px;
     margin-bottom: 20px;
 }
 
 .summary {
     padding: 10px 18px;
-    border-radius: 20px;
+    border-radius: 16px;
     font-weight: 600;
-    font-size: 14px;
 }
 
 .summary.present {
@@ -293,30 +495,16 @@
     color: #991b1b;
 }
 
-.table-wrapper {
-    margin-top: 20px;
-    max-height: 260px;
-    overflow-y: auto;
+/* Empty row */
+.empty-row {
+    text-align: center;
+    padding: 20px;
+    color: #64748b;
 }
 
-.attendance-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.attendance-table th,
-.attendance-table td {
-    padding: 10px;
-    border-bottom: 1px solid #e5e7eb;
-    font-size: 14px;
-}
-
-.attendance-table th {
-    background: #f3f4f6;
-}
-
+/* Status badge */
 .status-badge {
-    padding: 4px 10px;
+    padding: 4px 12px;
     border-radius: 12px;
     font-size: 13px;
     font-weight: 600;
@@ -331,59 +519,393 @@
     background: #fee2e2;
     color: #991b1b;
 }
-/* ===== Gen-Z Admin UI ===== */
+/* =========================
+   STUDENT DASHBOARD
+========================= */
 
-/* Role badges */
-.role-badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 12px;
+.student-page {
+    padding: 60px 20px;
+}
+
+.student-container {
+    display: flex;
+    justify-content: center;
+}
+
+.student-card {
+    width: min(520px, 95%);
+    padding: 40px;
+    border-radius: 26px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0.35)
+    );
+
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    box-shadow:
+        0 40px 90px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+
+    animation: fadeUp 0.6s ease;
+}
+
+/* Header */
+.student-header h2 {
+    font-size: 26px;
+    margin-bottom: 4px;
+}
+
+.student-header p {
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+/* Stats */
+.student-stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.stat-box {
+    flex: 1;
+    padding: 14px;
+    border-radius: 18px;
+    text-align: center;
     font-weight: 600;
-    text-transform: capitalize;
 }
 
-.role-admin {
-    background: #ede9fe;
-    color: #5b21b6;
+.stat-title {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
 }
 
-.role-teacher {
-    background: #e0f2fe;
-    color: #0369a1;
+.stat-value {
+    font-size: 22px;
 }
 
-.role-student {
+.stat-box.present {
     background: #dcfce7;
     color: #166534;
 }
 
-/* Action buttons */
-.action-btn {
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-}
-
-.action-edit {
-    background: #e0f2fe;
-    color: #0369a1;
-    margin-right: 6px;
-}
-
-.action-delete {
+.stat-box.absent {
     background: #fee2e2;
     color: #991b1b;
 }
 
-/* Admin table tweaks */
-.attendance-table td,
-.attendance-table th {
-    vertical-align: middle;
+/* Streak */
+.streak-box {
+    margin-bottom: 25px;
+    padding: 12px;
+    border-radius: 18px;
+    background: #ecfeff;
+    color: #0f766e;
+    font-weight: 600;
+    text-align: center;
 }
 
-.attendance-table tr:hover {
-    background: #f9fafb;
+/* Table tweaks */
+.student-card .attendance-table {
+    margin-top: 10px;
+}
+
+.student-card .attendance-table td {
+    padding: 12px;
+}
+
+.student-card .attendance-table tr:hover {
+    background: rgba(255,255,255,0.35);
+}
+/* =========================
+   CC DASHBOARD
+========================= */
+
+.cc-page {
+    padding: 60px 20px;
+}
+
+.cc-container {
+    display: flex;
+    justify-content: center;
+}
+
+.cc-card {
+    width: min(1100px, 95%);
+    padding: 40px;
+    border-radius: 26px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0.35)
+    );
+
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    box-shadow:
+        0 40px 90px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+
+    animation: fadeUp 0.6s ease;
+}
+
+/* Header */
+.cc-header h2 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.cc-header p {
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+/* Table tweaks */
+.cc-card .attendance-table th {
+    font-size: 14px;
+    color: #475569;
+}
+
+.cc-card .attendance-table td {
+    padding: 14px;
+}
+
+.cc-card .attendance-table tr:hover {
+    background: rgba(255,255,255,0.35);
+}
+/* =========================
+   INITIAL SETUP PAGE
+========================= */
+
+.initial-page {
+    padding: 60px 20px;
+}
+
+.initial-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.initial-card {
+    width: min(480px, 95%);
+    padding: 45px 50px;
+    border-radius: 26px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0.35)
+    );
+
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+
+    border: 1px solid rgba(255,255,255,0.35);
+
+    box-shadow:
+        0 40px 90px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+
+    animation: fadeUp 0.6s ease;
+}
+
+/* Header */
+.initial-header h2 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.initial-header p {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+/* Form */
+.initial-form label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.initial-form input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    font-size: 14px;
+    background: rgba(255,255,255,0.85);
+}
+
+.initial-form input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+    outline: none;
+}
+
+/* Button */
+.initial-form button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.initial-form button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(245,158,11,0.35);
+}
+.hidden {
+    display: none !important;
+}
+/* ADD USER FORM */
+
+.form-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.glass-card {
+    width: min(520px, 90%);
+    padding: 40px;
+    border-radius: 26px;
+    background: linear-gradient(135deg,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0.35)
+    );
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: 0 40px 90px rgba(0,0,0,0.45);
+}
+
+.glass-card h2 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+.glass-card label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 14px;
+    display: block;
+}
+
+.glass-card input,
+.glass-card select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    margin-top: 6px;
+    background: rgba(255,255,255,0.85);
+    outline: none;
+}
+
+.primary-btn {
+    width: 100%;
+    margin-top: 28px;
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg,#f59e0b,#fbbf24);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(245,158,11,0.4);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #7c3aed;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.hidden {
+    display: none;
+}
+
+/* smooth reveal */
+.slide-box {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.summary-grid {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+.summary-card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 18px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.present-card {
+    background: rgba(34,197,94,0.2);
+    color: #166534;
+}
+
+.absent-card {
+    background: rgba(239,68,68,0.2);
+    color: #7f1d1d;
+}
+
+.summary-card span {
+    display: block;
+    font-size: 28px;
+    margin-top: 8px;
+}
+
+.status-pill {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-pill.present {
+    background: rgba(34,197,94,0.2);
+    color: #166534;
+}
+
+.status-pill.absent {
+    background: rgba(239,68,68,0.2);
+    color: #7f1d1d;
 }

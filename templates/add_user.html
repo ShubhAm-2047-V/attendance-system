@@ -2,75 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add User</title>
+    <title>Add User | AttendEase</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <script>
-        function toggleStudentFields() {
-            const role = document.getElementById("role").value;
-            const studentFields = document.getElementById("student-fields");
-
-            if (role === "student") {
-                studentFields.classList.remove("hidden");
-            } else {
-                studentFields.classList.add("hidden");
-            }
-        }
-    </script>
 </head>
 
 <body class="dashboard-bg">
 
-<div class="dashboard-card">
+<div class="form-wrapper">
+    <div class="glass-card">
 
-    <div class="dashboard-header">
         <h2>Add New User</h2>
-        <p>Create admin, teacher or student</p>
+        <p class="subtitle">Create admin, teacher or student</p>
+
+        <form method="POST">
+
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+
+            <label>Role</label>
+            <select name="role" id="role" onchange="toggleRoleFields()" required>
+                <option value="">Select Role</option>
+                <option value="admin">Admin</option>
+                <option value="teacher">Teacher</option>
+                <option value="cc">CC</option>
+                <option value="student">Student</option>
+            </select>
+
+            <!-- Student + CC -->
+            <div id="student-fields" class="hidden slide-box">
+                <label>Year</label>
+                <select name="year">
+                    <option value="">Select Year</option>
+                    <option value="FY">FY</option>
+                    <option value="SY">SY</option>
+                    <option value="TY">TY</option>
+                </select>
+
+                <label>Division</label>
+                <select name="division">
+                    <option value="">Select Division</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+            </div>
+
+            <!-- Teacher -->
+            <div id="teacher-fields" class="hidden slide-box">
+                <label>Assign Subject</label>
+                <select name="subject_id">
+                    <option value="">Select Subject</option>
+                    {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <label>Phone Number</label>
+            <input type="text" name="phone" placeholder="Enter phone number">
+
+            <button type="submit" class="primary-btn">Create User</button>
+        </form>
+
+        <a href="{{ url_for('admin') }}" class="back-link">
+
+
+            ← Back to Admin Panel
+        </a>
+
     </div>
-
-    <form method="POST">
-
-        <input type="text" name="username" placeholder="Username" required>
-
-        <input type="password" name="password" placeholder="Password" required>
-
-        <select name="role" id="role" required onchange="toggleStudentFields()">
-            <option value="">Select Role</option>
-            <option value="admin">Admin</option>
-            <option value="teacher">Teacher</option>
-            <option value="student">Student</option>
-        </select>
-
-        <!-- Student-only fields -->
-        <div id="student-fields" class="hidden">
-
-            <select name="year">
-                <option value="">Select Year</option>
-                <option value="FY">FY</option>
-                <option value="SY">SY</option>
-                <option value="TY">TY</option>
-            </select>
-
-            <select name="division">
-                <option value="">Select Division</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select>
-
-        </div>
-
-        <input type="text" name="phone" placeholder="Phone Number">
-
-        <button type="submit" class="submit-btn">
-            Create User
-        </button>
-
-    </form>
-
-    <a href="/admin" class="exit-btn">Back</a>
-
 </div>
+
+<script>
+function toggleRoleFields() {
+    const role = document.getElementById("role").value;
+    const student = document.getElementById("student-fields");
+    const teacher = document.getElementById("teacher-fields");
+
+    student.classList.add("hidden");
+    teacher.classList.add("hidden");
+
+    if (role === "student" || role === "cc") {
+        student.classList.remove("hidden");
+    }
+
+    if (role === "teacher") {
+        teacher.classList.remove("hidden");
+    }
+}
+
+window.addEventListener("DOMContentLoaded", toggleRoleFields);
+</script>
 
 </body>
 </html>

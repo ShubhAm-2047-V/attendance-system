@@ -1,28 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Initial Setup</title>
+    <meta charset="UTF-8">
+    <title>Initial Setup | AttendEase</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="dashboard-bg">
 
-<div class="dashboard-card">
-    <div class="dashboard-header">
-        <h2>Initial Setup</h2>
-        <p>Enter secret key to create admin</p>
+<body class="dashboard-bg initial-page">
+
+<div class="initial-container">
+
+    <div class="initial-card glass">
+
+        <div class="initial-header">
+            <h2>🔐 Initial Setup</h2>
+            <p>Enter secret key to create admin</p>
+        </div>
+
+        <form method="POST" class="initial-form">
+
+            <label>Secret Key</label>
+            <input
+                type="password"
+                name="secret_key"
+                placeholder="Enter secret key"
+                required
+            >
+
+            <button type="submit">
+                Create Admin
+            </button>
+
+        </form>
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+
     </div>
 
-    <form method="POST">
-        <input type="password" name="key" placeholder="Secret Key" required>
-
-        <button type="submit" class="submit-btn">
-            Create Admin
-        </button>
-    </form>
-
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
 </div>
 
 </body>

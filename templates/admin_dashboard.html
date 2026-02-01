@@ -1,90 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Admin Panel</title>
+    <meta charset="UTF-8">
+    <title>Admin Panel | AttendEase</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="dashboard-bg">
+<body class="dashboard-bg admin-page page-enter">
 
-<div class="dashboard-card">
+<div class="admin-container">
 
-    <!-- Header -->
-    <div class="dashboard-header">
-        <h2>Admin Panel</h2>
-        <p>Manage users</p>
-    </div>
+    <div class="admin-card">
 
-    <!-- Add User Button -->
-    <a href="{{ url_for('add_user') }}" class="action-card">
-        <h3>+ Add New User</h3>
-        <p>Create admin, teacher or student</p>
-    </a>
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h2>Admin Panel</h2>
+            <p>Manage users</p>
+        </div>
 
-    <!-- Users List -->
-    <div class="table-wrapper" style="margin-top:20px;">
-        <table class="attendance-table">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.username }}</td>
-
-                    <td>
-    <span class="role-badge role-{{ user.role }}">
-        {{ user.role }}
-    </span>
-    {% if not user.is_active %}
-        <span class="role-badge role-admin">Locked</span>
-    {% endif %}
-</td>
-
-
-                    <td>
-    {% if user.id != current_user.id %}
-
-        <a href="{{ url_for('toggle_user', user_id=user.id) }}"
-           class="action-btn action-edit">
-            {{ 'Lock' if user.is_active else 'Unlock' }}
+        <!-- Add User -->
+        <a href="{{ url_for('add_user') }}" class="action-card add-user-card">
+            <h3>+ Add New User</h3>
+            <p>Create admin, teacher or student</p>
         </a>
 
-        <a href="{{ url_for('delete_user', user_id=user.id) }}"
-           class="action-btn action-delete"
-           onclick="return confirm('Delete this user?')">
-            Delete
+        <!-- TABLE SWITCHER (IMPORTANT STRUCTURE) -->
+        <div class="table-switcher">
+
+            <!-- USERS TABLE -->
+            <div class="table-view active" id="users-table">
+                <div class="table-wrapper">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+
+                                <td>
+                                    <span class="role-badge role-{{ user.role }}">
+                                        {{ user.role }}
+                                    </span>
+
+                                    {% if not user.is_active %}
+                                        <span class="role-badge role-admin">
+                                            Locked
+                                        </span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if user.id != current_user.id %}
+                                        <a href="{{ url_for('toggle_user', user_id=user.id) }}"
+                                           class="action-btn action-edit">
+                                            {{ 'Lock' if user.is_active else 'Unlock' }}
+                                        </a>
+
+                                        <a href="{{ url_for('delete_user', user_id=user.id) }}"
+                                           class="action-btn action-delete"
+                                           onclick="return confirm('Delete this user?')">
+                                            Delete
+                                        </a>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="empty-row">
+                                    No users found
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- FUTURE TABLE PLACEHOLDER (animation ready) -->
+            <div class="table-view" id="other-table">
+                <!-- add another table here later -->
+            </div>
+
+        </div>
+
+        <!-- Logout -->
+        <a href="{{ url_for('logout') }}" class="logout-btn-full">
+            Logout
         </a>
 
-    {% else %}
-        —
-    {% endif %}
-</td>
-
-                </tr>
-
-                {% else %}
-                <tr>
-                    <td colspan="3" style="text-align:center;color:#6b7280;">
-                        No users found
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
-
-    <!-- Logout -->
-    <a href="{{ url_for('logout') }}" class="logout-btn-full">
-        Logout
-    </a>
 
 </div>
+
+<!-- TABLE SWITCH SCRIPT -->
+<script>
+function switchTable(id) {
+    const current = document.querySelector('.table-view.active');
+    const next = document.getElementById(id);
+
+    if (!next || current === next) return;
+
+    current.classList.add('exit');
+    current.classList.remove('active');
+
+    setTimeout(() => {
+        current.classList.remove('exit');
+        next.classList.add('active');
+    }, 400);
+}
+</script>
 
 </body>
 </html>
