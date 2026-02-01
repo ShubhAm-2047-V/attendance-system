@@ -58,6 +58,15 @@ class Attendance(db.Model):
     status = db.Column(db.String(10), nullable=False)
     date = db.Column(db.Date, nullable=False)
 
+with app.app_context():
+    db.create_all()
+
+    for s in ["Python", "Java", "MIC", "ES", "DCN"]:
+        if not Subject.query.filter_by(name=s).first():
+            db.session.add(Subject(name=s))
+
+    db.session.commit()
+
 
 # =========================
 # LOGIN MANAGER
@@ -382,11 +391,4 @@ def student():
 # RUN
 # =========================
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        for s in ["Python", "Java", "MIC", "ES", "DCN"]:
-            if not Subject.query.filter_by(name=s).first():
-                db.session.add(Subject(name=s))
-        db.session.commit()
-
     app.run(debug=True)
