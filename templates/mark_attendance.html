@@ -1,173 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Mark Attendance | AttendEase</title>
+  <meta charset="UTF-8">
+  <title>Mark Attendance</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1e3c72, #4b3dbb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      width: 340px;
+      padding: 24px;
+      border-radius: 32px;
+      background: #a9addd;
+      text-align: center;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.4);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+
+    .counter {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .student-name {
+      margin-top: 10px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .swipe-box {
+      margin-top: 16px;
+      height: 260px;
+      border-radius: 24px;
+      display: flex;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .present {
+      flex: 1;
+      background: #4a90e2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .absent {
+      flex: 1;
+      background: #e05a78;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .hint {
+      font-size: 12px;
+      margin-top: 10px;
+      opacity: 0.7;
+    }
+
+    .back-btn {
+      margin-top: 18px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffcc33, #ffb300);
+    }
+  </style>
 </head>
 
-<body class="dashboard-bg admin-page page-enter">
+<body>
 
-<div class="admin-container">
+<div class="card">
+  <h1>Mark Attendance</h1>
+  <div class="subtitle">Select attendance status for students</div>
 
-    <div class="attendance-card glass-card">
-
-        <!-- Header -->
-        <div class="attendance-header">
-            <h2>Mark Attendance</h2>
-            <p>Select attendance status for students</p>
-        </div>
-
-        <!-- Progress -->
-        <div id="progress-text" class="progress-text"></div>
-
-        <!-- Student name -->
-        <div id="student-name" class="student-name"></div>
-
-        <!-- Buttons -->
-        <div class="status-options" id="action-buttons">
-            <button class="pill present" onclick="submitAttendance('Present')">
-                ✔ Present
-            </button>
-            <button class="pill absent" onclick="submitAttendance('Absent')">
-                ✖ Absent
-            </button>
-        </div>
-
-        <!-- Done Section -->
-        <div id="done-msg" class="done-msg hidden">
-
-            <div class="done-title">
-                ✅ All students marked
-            </div>
-
-            <!-- Chart -->
-            <div class="chart-wrap">
-                <canvas id="attendanceChart" width="220" height="220"></canvas>
-            </div>
-
-            <!-- Absent list -->
-            <div class="absent-section">
-                <h4>Absent Students</h4>
-                <ol id="absent-list"></ol>
-            </div>
-
-            <!-- Exit -->
-            <a href="/teacher" class="exit-btn">
-                ← Exit to Dashboard
-            </a>
-        </div>
-
+  {% if students|length == 0 %}
+    <div class="counter">Student 0 / 0</div>
+    <div class="student-name">No students</div>
+  {% else %}
+    <div class="counter">
+      Student <span id="index">1</span> / {{ students|length }}
     </div>
 
+    <div class="student-name" id="studentName">
+      {{ students[0].name }}
+    </div>
+
+    <div class="swipe-box">
+      <div class="present" onclick="mark('Present')">Present</div>
+      <div class="absent" onclick="mark('Absent')">Absent</div>
+    </div>
+
+    <div class="hint">Tap left = Present • Tap right = Absent</div>
+  {% endif %}
+
+  <form action="/teacher">
+    <button class="back-btn">Back to Dashboard</button>
+  </form>
 </div>
 
 <script>
-const students = [
-    {% for s in students %}
-        "{{ s.username }}",
-    {% endfor %}
-];
+  const students = {{ students|tojson }};
+  let i = 0;
 
-let currentIndex = 0;
-let presentCount = 0;
-let absentCount = 0;
-let absentStudents = [];
-let locked = false;
-
-const nameBox = document.getElementById("student-name");
-const progressBox = document.getElementById("progress-text");
-const doneMsg = document.getElementById("done-msg");
-const buttons = document.getElementById("action-buttons");
-const absentList = document.getElementById("absent-list");
-
-function showStudent() {
-    if (students.length === 0) {
-        nameBox.innerText = "No students found";
-        progressBox.innerText = "";
-        buttons.style.display = "none";
-        return;
-    }
-
-    if (currentIndex < students.length) {
-        nameBox.innerText = students[currentIndex];
-        progressBox.innerText = `Student ${currentIndex + 1} / ${students.length}`;
-    } else {
-        nameBox.style.display = "none";
-        buttons.style.display = "none";
-        progressBox.style.display = "none";
-        doneMsg.classList.remove("hidden");
-        showChart();
-        showAbsentList();
-    }
-}
-
-function submitAttendance(status) {
-    if (locked) return;
-    locked = true;
+  function mark(status) {
+    if (i >= students.length) return;
 
     fetch("/mark_single", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: `student=${students[currentIndex]}&status=${status}`
-    }).then(res => {
-        locked = false;
-
-        if (!res.ok) return;
-
-        if (status === "Present") {
-            presentCount++;
-        } else {
-            absentCount++;
-            absentStudents.push(students[currentIndex]);
-        }
-
-        currentIndex++;
-        showStudent();
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `student=${students[i].name}&status=${status}`
     });
-}
 
-function showChart() {
-    const ctx = document.getElementById("attendanceChart").getContext("2d");
-    new Chart(ctx, {
-        type: "pie",
-        data: {
-            labels: ["Present", "Absent"],
-            datasets: [{
-                data: [presentCount, absentCount],
-                backgroundColor: ["#22c55e", "#ef4444"]
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: "bottom",
-                    labels: { color: "#0f172a" }
-                }
-            }
-        }
-    });
-}
+    i++;
 
-function showAbsentList() {
-    absentList.innerHTML = "";
-    if (absentStudents.length === 0) {
-        absentList.innerHTML = "<li>No absent students 🎉</li>";
+    if (i < students.length) {
+      document.getElementById("index").innerText = i + 1;
+      document.getElementById("studentName").innerText = students[i].name;
     } else {
-        absentStudents.forEach(name => {
-            const li = document.createElement("li");
-            li.textContent = name;
-            absentList.appendChild(li);
-        });
+      document.querySelector(".student-name").innerText = "Done";
+      document.querySelector(".counter").innerText =
+        `Student ${students.length} / ${students.length}`;
     }
-}
-
-// init
-showStudent();
+  }
 </script>
 
 </body>

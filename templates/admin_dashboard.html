@@ -19,15 +19,18 @@
         </div>
 
         <!-- Add User -->
-        <a href="{{ url_for('add_user') }}" class="action-card add-user-card">
-            <h3>+ Add New User</h3>
-            <p>Create admin, teacher or student</p>
-        </a>
+        <div class="action-box">
+            <a href="{{ url_for('add_user') }}" class="add-user-btn">
+                + Add New User
+            </a>
+            <p class="add-user-subtext">
+                Create admin, teacher or student
+            </p>
+        </div>
 
-        <!-- TABLE SWITCHER (IMPORTANT STRUCTURE) -->
+        <!-- USERS TABLE -->
         <div class="table-switcher">
 
-            <!-- USERS TABLE -->
             <div class="table-view active" id="users-table">
                 <div class="table-wrapper">
                     <table class="attendance-table">
@@ -86,39 +89,18 @@
                 </div>
             </div>
 
-            <!-- FUTURE TABLE PLACEHOLDER (animation ready) -->
-            <div class="table-view" id="other-table">
-                <!-- add another table here later -->
-            </div>
-
         </div>
 
         <!-- Logout -->
-        <a href="{{ url_for('logout') }}" class="logout-btn-full">
-            Logout
-        </a>
+        <div class="logout-box">
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                Logout
+            </a>
+        </div>
 
     </div>
 
 </div>
-
-<!-- TABLE SWITCH SCRIPT -->
-<script>
-function switchTable(id) {
-    const current = document.querySelector('.table-view.active');
-    const next = document.getElementById(id);
-
-    if (!next || current === next) return;
-
-    current.classList.add('exit');
-    current.classList.remove('active');
-
-    setTimeout(() => {
-        current.classList.remove('exit');
-        next.classList.add('active');
-    }, 400);
-}
-</script>
 
 </body>
 </html>

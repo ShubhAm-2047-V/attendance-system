@@ -1,0 +1,30 @@
+name: attendance_mobile_app
+description: ROLLUP Attendance App
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/rollup_logo.png
+  adaptive_icon_background: "#0F0C29"
+  adaptive_icon_foreground: assets/rollup_logo.png
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/rollup_logo.png

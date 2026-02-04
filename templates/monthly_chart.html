@@ -1,81 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Monthly Report | AttendEase</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>Monthly Attendance</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1e3c72, #4b3dbb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .card {
+      width: 92%;
+      max-width: 900px;
+      padding: 30px;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #a6abd9, #8f8ad0);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+
+    .student-box {
+      margin-top: 24px;
+      background: #ffcc33;
+      border-radius: 28px;
+      padding: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      gap: 14px;
+      margin: 12px 0;
+      flex-wrap: wrap;
+    }
+
+    .mini-box {
+      background: #fff;
+      padding: 12px 18px;
+      border-radius: 18px;
+      min-width: 120px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .low { color: red; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 10px;
+    }
+
+    th {
+      background: rgba(0,0,0,0.1);
+    }
+
+    tr:not(:last-child) td {
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+    }
+
+    .back-btn {
+      margin: 26px auto 0;
+      display: block;
+      padding: 14px 46px;
+      font-weight: bold;
+      border: none;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #ffcc33, #ffb300);
+      cursor: pointer;
+    }
+  </style>
 </head>
 
-<body class="dashboard-bg admin-page page-enter">
+<body>
 
-<div class="admin-container">
+<div class="card">
 
-    <div class="admin-card" style="max-width: 720px;">
+  <h1>Monthly Attendance</h1>
+  <div class="subtitle">
+    Subject: {{ subject }} | Class Avg: {{ class_average }}%
+  </div>
 
-        <!-- Header -->
-        <div class="dashboard-header">
-            <h2>Monthly Attendance</h2>
-            <p>Attendance overview for this month</p>
-        </div>
+  {% for s in report %}
+  <div class="student-box">
 
-        <!-- SUMMARY CARDS -->
-        <div class="summary-grid">
+    <strong>Student: {{ s.student }}</strong>
 
-            <div class="summary-card present-card">
-                <h3>Present</h3>
-                <span>{{ present_count }}</span>
-            </div>
-
-            <div class="summary-card absent-card">
-                <h3>Absent</h3>
-                <span>{{ absent_count }}</span>
-            </div>
-
-        </div>
-
-        <!-- TABLE -->
-        <div class="table-wrapper">
-
-            <table class="attendance-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for record in records %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ record.date }}</td>
-                        <td>
-                            {% if record.status == "Present" %}
-                                <span class="status-pill present">Present</span>
-                            {% else %}
-                                <span class="status-pill absent">Absent</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="3" class="empty-row">
-                            No attendance records found
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-        </div>
-
-        <!-- Exit -->
-        <a href="{{ url_for('teacher') }}" class="logout-btn-full">
-            Back to Dashboard
-        </a>
-
+    <div class="summary-row">
+      <div class="mini-box">Present<br>{{ s.present }}</div>
+      <div class="mini-box">Absent<br>{{ s.absent }}</div>
+      <div class="mini-box">Working Days<br>{{ s.total }}</div>
+      <div class="mini-box {% if s.percentage < 75 %}low{% endif %}">
+        Attendance<br>{{ s.percentage }}%
+      </div>
     </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in s.records %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ r.date }}</td>
+          <td>{{ r.status }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+  {% endfor %}
+
+  <form action="/teacher">
+    <button class="back-btn">Back to Dashboard</button>
+  </form>
 
 </div>
 

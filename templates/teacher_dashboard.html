@@ -1,101 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Teacher Dashboard | AttendEase</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>Teacher Dashboard</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #243b8a, #3b2fa1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+
+    /* CARD — bottom height reduced */
+    .card {
+      width: 460px;
+      padding: 26px 24px 14px;   /* 👈 bottom padding reduced */
+      border-radius: 30px;
+      background: #a9addd;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.4);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      margin-top: 4px;
+      font-size: 13px;
+      color: rgba(0,0,0,0.5);
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .section h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .section.monthly h2 {
+      font-size: 22px;
+    }
+
+    .section p {
+      margin: 6px 0 12px;
+      font-size: 13px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    select {
+      padding: 6px 10px;
+      font-size: 13px;
+      border-radius: 6px;
+      border: none;
+      min-width: 120px;
+    }
+
+    .btn {
+      padding: 9px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      border-radius: 22px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ffcc33, #ffb300);
+      color: #000;
+    }
+
+    /* LOGOUT — pulled up */
+    .logout {
+      margin-top: 14px;   /* 👈 reduced gap */
+      width: 220px;
+    }
+  </style>
 </head>
+<body>
 
-<body class="dashboard-bg admin-page page-enter">
+  <div class="card">
 
-<div class="admin-container">
+    <h1>Teacher Dashboard</h1>
+    <div class="subtitle">Manage attendance efficiently</div>
 
-    <div class="admin-card" style="max-width: 540px;">
+    <!-- MARK ATTENDANCE -->
+    <div class="section">
+      <h2>Mark Attendance</h2>
+      <p>Select class to record today’s attendance</p>
 
-        <!-- Header -->
-        <div class="dashboard-header">
-            <h2>Teacher Dashboard</h2>
-            <p>Manage attendance efficiently</p>
+      <form action="/mark-attendance" method="get">
+        <div class="row">
+          <select name="year" required>
+            <option value="" disabled selected>Select Year</option>
+            <option value="FY">FY</option>
+            <option value="SY">SY</option>
+            <option value="TY">TY</option>
+          </select>
+
+          <select name="division" required>
+            <option value="" disabled selected>Select Division</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
+
+          <button type="submit" class="btn">Start Attendance</button>
         </div>
-
-        <!-- MARK ATTENDANCE -->
-        <div class="teacher-card" style="margin-bottom:20px;">
-
-            <div class="icon">📝</div>
-
-            <div class="content">
-                <h3>Mark Attendance</h3>
-                <p>Select class to record today’s attendance</p>
-
-                <form method="GET"
-                      action="{{ url_for('mark_attendance') }}"
-                      class="teacher-form">
-
-                    <select name="year" required>
-                        <option value="">Select Year</option>
-                        <option value="FY">FY</option>
-                        <option value="SY">SY</option>
-                        <option value="TY">TY</option>
-                    </select>
-
-                    <select name="division" required>
-                        <option value="">Select Division</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                    </select>
-
-                    <button type="submit" class="primary-btn">
-                        Start Attendance
-                    </button>
-
-                </form>
-            </div>
-        </div>
-
-        <!-- MONTHLY REPORT -->
-        <div class="teacher-card">
-
-            <div class="icon">📊</div>
-
-            <div class="content">
-                <h3>Monthly Report</h3>
-                <p>View attendance summary</p>
-
-                <form method="GET"
-                      action="{{ url_for('monthly_chart') }}"
-                      class="teacher-form">
-
-                    <select name="year" required>
-                        <option value="">Select Year</option>
-                        <option value="FY">FY</option>
-                        <option value="SY">SY</option>
-                        <option value="TY">TY</option>
-                    </select>
-
-                    <select name="division" required>
-                        <option value="">Select Division</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                    </select>
-
-                    <button type="submit" class="primary-btn">
-                        View Report
-                    </button>
-
-                </form>
-            </div>
-        </div>
-
-        <!-- Logout -->
-        <a href="{{ url_for('logout') }}" class="logout-btn-full">
-            Logout
-        </a>
-
+      </form>
     </div>
 
-</div>
+    <!-- MONTHLY REPORT -->
+    <div class="section monthly">
+      <h2>Monthly Report</h2>
+      <p>View attendance summary</p>
+
+      <form action="/monthly_chart" method="get">
+        <div class="row">
+          <select name="year" required>
+            <option value="" disabled selected>Select Year</option>
+            <option value="FY">FY</option>
+            <option value="SY">SY</option>
+            <option value="TY">TY</option>
+          </select>
+
+          <select name="division" required>
+            <option value="" disabled selected>Select Division</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
+
+          <button type="submit" class="btn">View Report</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- LOGOUT -->
+    <form action="/logout">
+      <button type="submit" class="btn logout">Logout</button>
+    </form>
+
+  </div>
 
 </body>
 </html>

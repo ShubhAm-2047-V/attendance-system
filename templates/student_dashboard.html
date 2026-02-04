@@ -10,7 +10,15 @@
 
 <div class="student-container">
 
-    <div class="student-card glass">
+    <div class="student-card glass" style="position: relative;">
+
+        <!-- 🔔 Notification Bell -->
+        <div class="notif-bell">
+            🔔
+            {% if notifications and notifications|length > 0 %}
+                <span class="notif-count">{{ notifications|length }}</span>
+            {% endif %}
+        </div>
 
         <!-- Greeting -->
         <div class="student-header">
@@ -18,9 +26,8 @@
             <p>Your attendance overview</p>
         </div>
 
-        <!-- Stats -->
+        <!-- Stats (kept as-is) -->
         <div class="student-stats">
-
             <div class="stat-box present">
                 <span class="stat-title">Present</span>
                 <span class="stat-value">{{ present_count or 0 }}</span>
@@ -30,29 +37,41 @@
                 <span class="stat-title">Absent</span>
                 <span class="stat-value">{{ absent_count or 0 }}</span>
             </div>
-
         </div>
 
-        <!-- 🔥 STREAK -->
+        <!-- 🔥 Streak -->
         <div class="streak-box">
             🔥 <strong>{{ streak or 0 }}</strong> day streak
         </div>
 
-        <!-- Attendance Table -->
+        <!-- 🔔 Notification List -->
+        {% if notifications and notifications|length > 0 %}
+        <div class="notif-list">
+            {% for n in notifications %}
+                <div class="notif-item">
+                    {{ n.message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- ✅ ATTENDANCE TABLE (DATE + SUBJECT + STATUS) -->
         <div class="table-wrapper">
             <table class="attendance-table">
                 <thead>
                     <tr>
                         <th>Date</th>
+                        <th>Subject</th>
                         <th>Status</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {% if records %}
+                    {% if records and records|length > 0 %}
                         {% for record in records %}
                         <tr>
                             <td>{{ record.date.strftime("%d-%m-%Y") }}</td>
+                            <td>{{ record.subject }}</td>
                             <td>
                                 <span class="status-badge {{ record.status|lower }}">
                                     {{ record.status }}
@@ -62,8 +81,10 @@
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="2" class="empty-row">
-                                No attendance records found
+                            <td colspan="3" class="empty-state">
+                                📭 No attendance yet  
+                                <br>
+                                <small>Your records will appear here</small>
                             </td>
                         </tr>
                     {% endif %}
@@ -71,10 +92,12 @@
             </table>
         </div>
 
-        <!-- Logout -->
-        <a href="{{ url_for('logout') }}" class="logout-btn-full">
-            Logout
-        </a>
+        <!-- Logout (already centered & yellow as you wanted) -->
+        <div class="logout-wrapper">
+            <a href="{{ url_for('logout') }}" class="logout-btn-yellow">
+                Logout
+            </a>
+        </div>
 
     </div>
 

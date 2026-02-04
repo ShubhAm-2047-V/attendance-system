@@ -2,24 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CC – Full Student Attendance Report</title>
+    <title>CC – Full Student Attendance Report | Rollup</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="dashboard-bg admin-page page-enter">
+<body class="dashboard-bg cc-page page-enter">
 
-<div class="admin-container">
+<div class="cc-container">
 
-    <div class="admin-card glass-card" style="max-width: 1000px;">
+    <div class="cc-card glass-card">
 
         <!-- Header -->
-        <div class="dashboard-header">
+        <div class="cc-header">
             <h2>📊 Full Student Attendance Report</h2>
             <p>Class Coordinator View</p>
         </div>
 
+        <!-- PDF Download Button -->
+        <div style="text-align:right; margin-bottom:18px;">
+            <a href="{{ url_for('export_cc_pdf') }}"
+               class="primary-btn"
+               style="width:auto; padding:10px 18px;">
+                ⬇ Download PDF
+            </a>
+        </div>
+
         {% if report and report|length > 0 %}
 
+        <!-- Attendance Table -->
         <div class="table-wrapper">
             <table class="attendance-table">
 
@@ -28,8 +38,7 @@
                     <tr>
                         <th>Student</th>
 
-                        {# Dynamically show subject columns #}
-                        {% for key, value in report[0].items() %}
+                        {% for key in report[0].keys() %}
                             {% if key not in ['student', 'total'] %}
                                 <th>{{ key }}</th>
                             {% endif %}
@@ -41,17 +50,21 @@
 
                 <!-- TABLE BODY -->
                 <tbody>
-                    {% for student in report %}
+                    {% for row in report %}
                     <tr>
-                        <td>{{ student.student }}</td>
+                        <td><strong>{{ row.student }}</strong></td>
 
-                        {% for key, value in student.items() %}
+                        {% for key, value in row.items() %}
                             {% if key not in ['student', 'total'] %}
-                                <td>{{ value }}%</td>
+                                <td>
+                                    {{ value if value else '—' }}
+                                </td>
                             {% endif %}
                         {% endfor %}
 
-                        <td><strong>{{ student.total }}%</strong></td>
+                        <td>
+                            <strong>{{ row.total }}</strong>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -60,9 +73,12 @@
         </div>
 
         {% else %}
-            <p class="empty-row" style="margin-top:20px;">
-                No attendance data available
-            </p>
+            <!-- Empty State -->
+            <div class="empty-state">
+                📭 <strong>No attendance data available</strong>
+                <br>
+                <small>Once teachers mark attendance, reports will appear here.</small>
+            </div>
         {% endif %}
 
         <!-- Logout -->

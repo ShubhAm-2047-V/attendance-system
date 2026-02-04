@@ -9,12 +9,18 @@
 <body class="dashboard-bg">
 
 <div class="form-wrapper">
-    <div class="glass-card">
+    <div class="glass-card add-user-card">
 
-        <h2>Add New User</h2>
-        <p class="subtitle">Create admin, teacher or student</p>
+        <!-- HEADER -->
+        <div class="add-user-header">
+            <h2 class="add-user-title">Add New User</h2>
+            <p class="add-user-subtitle">
+                Create admin, teacher, student and cc
+            </p>
+        </div>
 
-        <form method="POST">
+        <!-- FORM (SINGLE COLUMN) -->
+        <form method="POST" class="add-user-form single-column">
 
             <label>Username</label>
             <input type="text" name="username" placeholder="Enter username" required>
@@ -64,14 +70,18 @@
             <label>Phone Number</label>
             <input type="text" name="phone" placeholder="Enter phone number">
 
-            <button type="submit" class="primary-btn">Create User</button>
+            <!-- ACTIONS (BOTTOM CENTER) -->
+            <div class="add-user-actions">
+                <button type="submit" class="login-btn">
+                    Create User
+                </button>
+
+                <a href="{{ url_for('admin') }}" class="back-link center-link">
+                    ← Back to Admin Panel
+                </a>
+            </div>
+
         </form>
-
-        <a href="{{ url_for('admin') }}" class="back-link">
-
-
-            ← Back to Admin Panel
-        </a>
 
     </div>
 </div>
