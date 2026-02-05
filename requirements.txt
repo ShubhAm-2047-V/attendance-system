@@ -1,7 +1,7 @@
 Flask==3.0.0
 Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
+SQLAlchemy==2.0.25
 Werkzeug==3.0.1
 gunicorn==21.2.0
-SQLAlchemy==2.0.25
 python-dotenv==1.0.1
