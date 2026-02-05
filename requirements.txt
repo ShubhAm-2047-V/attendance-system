@@ -4,3 +4,4 @@ Flask-SQLAlchemy==3.1.1
 SQLAlchemy==2.0.25
 gunicorn==21.2.0
 python-dotenv==1.0.1
+reportlab==4.1.0
