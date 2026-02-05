@@ -1424,3 +1424,90 @@ body {
     display: none !important;
 }
 
+.users-table-wrapper {
+  max-height: 380px;        /* adjust as needed */
+  overflow-y: auto;
+  margin-top: 15px;
+  border-radius: 12px;
+}
+
+/* Optional: smooth scrolling */
+.users-table-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.users-table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+/* Fix admin card height */
+.admin-card {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Make table area scrollable */
+.table-wrapper {
+    max-height: 380px;   /* adjust if needed */
+    overflow-y: auto;
+    margin-top: 12px;
+    border-radius: 12px;
+}
+
+/* Ensure table header stays visible */
+.attendance-table thead {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 2;
+}
+
+/* Keep logout fixed at bottom */
+.logout-box {
+    margin-top: auto;
+}
+.admin-card {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+.table-switcher {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;   /* VERY IMPORTANT */
+}
+.table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 12px;
+    border-radius: 12px;
+    min-height: 0;   /* VERY IMPORTANT */
+}
+.pagination-box {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #333;
+    text-decoration: none;
+}
+
+.page-btn:hover {
+    background: #fff;
+}
+
+.page-btn.active {
+    background: #7c3aed;
+    color: #fff;
+}

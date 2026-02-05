@@ -4,6 +4,7 @@
 CC_REPORT_CACHE = []
 
 
+from flask import request
 
 from flask import (
     Flask, render_template, request,
@@ -296,13 +297,25 @@ def logout():
 @app.route("/admin")
 @login_required
 def admin():
-    if current_user.role != "admin":
-        return redirect("/")
-    return render_template("admin_dashboard.html", users=User.query.all())
+    page = request.args.get("page", 1, type=int)
+    per_page = 10
+
+    users_paginated = User.query.order_by(User.id).paginate(
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+
+    return render_template(
+        "admin_dashboard.html",
+        users=users_paginated.items,
+        pagination=users_paginated
+    )
 
 # =========================
 # ADMIN ACTIONS (MISSING ROUTES)
 # =========================
+
 
 @app.route("/toggle_user/<int:user_id>")
 @login_required
